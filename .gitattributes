@@ -1,0 +1,2 @@
+./mandelbrot.js -diff
+./mandelbrot.wasm -diff
