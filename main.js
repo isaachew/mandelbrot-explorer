@@ -2,8 +2,11 @@ let canvas=document.getElementById("render")
 let context=canvas.getContext("2d")
 let width=canvas.width
 let height=canvas.height
+let scale=4
+let cx=-1,cy=0
 let idata=context.createImageData(width,height)
 Module.onRuntimeInitialized=()=>{
+    Module.init(width,height)
     console.log("wasm loaded")
     console.time("mandelbrot")
     var i=0
@@ -11,7 +14,7 @@ Module.onRuntimeInitialized=()=>{
         for(var x=0;x<width;x++){
             let xoff=(x-width/2)/width
             let yoff=(y-height/2)/width
-            let cmplx=new Module.complex(xoff*4,yoff*4)
+            let cmplx=new Module.complex(xoff*scale+cx,yoff*scale+cy)
             let result=Module.numits(cmplx)
             cmplx.delete()
             idata.data[i++]=result==-1||255

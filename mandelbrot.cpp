@@ -6,6 +6,10 @@ emcc mandelbrot.cpp --bind -ffast-math -o mandelbrot.js
  */
 
 int maxiters=1000;
+int width=600;
+int height=600;
+
+int* results;
 
 int numits(std::complex<double> c){
     std::complex<double> z=0;
@@ -16,6 +20,20 @@ int numits(std::complex<double> c){
     }
     return -1;
 }
+
+
+int getres(){
+    return (int)results;
+}
+
+int init(int wid,int hei){
+    width=wid;
+    height=hei;
+    results=new int[width*height];
+
+    return 0;
+}
+
 EMSCRIPTEN_BINDINGS(cmplx){
     emscripten::class_<std::complex<double>> cmplx("complex");//will be complex in JavaScript
     cmplx.constructor<>();
@@ -24,5 +42,9 @@ EMSCRIPTEN_BINDINGS(cmplx){
     cmplx.property("imag",emscripten::select_overload<double()const>(&std::complex<double>::imag));
 }
 EMSCRIPTEN_BINDINGS(mandelbrot){
+    emscripten::function("init",&init);
+
+    emscripten::function("getResultArray",&getres);
+
     emscripten::function("numits",&numits);
 }
