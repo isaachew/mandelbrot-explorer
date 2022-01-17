@@ -9,11 +9,7 @@ let idata=context.createImageData(width,height)
 
 var resPtr=null,resultsArray=null
 
-function initModule(){
-    Module.init(width,height)
-
-    resPtr=Module.getImgArray()
-    resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
+function render(){
     console.log("wasm loaded")
     console.time("mandelbrot")
     var colarr=new Uint32Array(idata.data.buffer)
@@ -27,5 +23,20 @@ function initModule(){
     context.putImageData(idata,0,0)
     console.timeEnd("mandelbrot")
 }
+
+function initModule(){
+
+    Module.init(width,height)
+
+    resPtr=Module.getImgArray()
+    resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
+    render()
+}
+document.getElementById("render").addEventListener("click",e=>{
+    var coords=Module.getCoords(e.offsetX,e.offsetY);
+    Module.updateCoords(coords,scale/=2);
+    coords.delete()
+    render()
+})
 if(initialised)initModule()
 else Module.onRuntimeInitialized=initModule

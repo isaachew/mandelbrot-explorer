@@ -43,6 +43,11 @@ std::complex<double> getcoords(int x,int y){
     return reloff+center;
 }
 
+void updcoords(std::complex<double> ncenter,double depth){
+    center=ncenter;
+    zoom=depth;
+}
+
 unsigned int getcol(int result){
     if(result==-1)return 255<<24;
     unsigned char r=255;
@@ -87,9 +92,11 @@ EMSCRIPTEN_BINDINGS(mandelbrot){
     emscripten::function("init",&init);
 
     emscripten::function("getImgArray",&getimg);
-    emscripten::function("getCoordsFromXY",&getcoords);
+    emscripten::function("getCoords",&getcoords);
     emscripten::function("getFromPalette",&getcol);
     emscripten::function("calcPixel",&calcpixel);
+
+    emscripten::function("updateCoords",&updcoords);
 
     emscripten::function("numits",&numits);
 }
