@@ -9,18 +9,25 @@ let idata=context.createImageData(width,height)
 
 var resPtr=null,resultsArray=null
 
-function render(){
+async function render(){
     console.log("wasm loaded")
     console.time("mandelbrot")
     var colarr=new Uint32Array(idata.data.buffer)
+    var pnow=performance.now()
     for(var y=0;y<height;y++){
         for(var x=0;x<width;x++){
             Module.calcPixel(x,y)
         }
+        idata.data.set(resultsArray,0)
+        context.putImageData(idata,0,0)
+
+        var nnow=performance.now()
+        if(nnow>pnow+16){
+            await new Promise(a=>setTimeout(a))
+            pnow=nnow
+        }
     }
     console.log("put img data")
-    idata.data.set(resultsArray,0)
-    context.putImageData(idata,0,0)
     console.timeEnd("mandelbrot")
 }
 
