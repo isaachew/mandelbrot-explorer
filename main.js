@@ -39,9 +39,19 @@ function initModule(){
     resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
     render()
 }
-document.getElementById("render").addEventListener("click",e=>{
+document.getElementById("render").addEventListener("contextmenu",e=>{
+    e.preventDefault()
+})
+document.getElementById("render").addEventListener("mousedown",e=>{
     var coords=Module.getCoords(e.offsetX,e.offsetY);
-    Module.updateCoords(coords,scale/=2);
+    switch(e.button){
+        case 0:
+        scale/=2;
+        break;
+        case 2:
+        scale*=2;
+    }
+    Module.updateCoords(coords,scale);
     coords.delete()
     render()
 })
