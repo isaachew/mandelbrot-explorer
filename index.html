@@ -1,12 +1,20 @@
 <DOCTYPE html>
 <html>
     <head>
+        <script>
+            var initialised=false
+            var Module={
+                onRuntimeInitialized:()=>{
+                    initialised=true
+                }
+            }
+        </script>
         <script src="mandelbrot.js"></script>
+        <script src="main.js" defer></script>
     </head>
     <body>
         <canvas id="render" width="600" height="600"></canvas>
 
 
-        <script src="main.js"></script>
     </body>
 </html>

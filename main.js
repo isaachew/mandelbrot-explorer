@@ -9,7 +9,7 @@ let idata=context.createImageData(width,height)
 
 var resPtr=null,resultsArray=null
 
-Module.onRuntimeInitialized=()=>{
+function initModule(){
     Module.init(width,height)
 
     resPtr=Module.getImgArray()
@@ -27,3 +27,5 @@ Module.onRuntimeInitialized=()=>{
     context.putImageData(idata,0,0)
     console.timeEnd("mandelbrot")
 }
+if(initialised)initModule()
+else Module.onRuntimeInitialized=initModule
