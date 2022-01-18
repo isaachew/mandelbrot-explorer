@@ -46,6 +46,9 @@ std::complex<double> getcoords(int x,int y){
 void updcoords(std::complex<double> ncenter,double depth){
     center=ncenter;
     zoom=depth;
+    for(int i=0;i<width*height;i++){
+        results[i]=0;
+    }
 }
 
 unsigned int getcol(int result){
@@ -61,11 +64,22 @@ void putpixel(int x,int y,int result){
     img[y*width+x]=getcol(result);
 }
 
-int calcpixel(int x,int y){
+int calcpixel(int x,int y,bool usecache){
+    if(usecache){
+        int cached=results[y*width+x];
+        if(cached)return cached;
+    }
     int res=numits(getcoords(x,y));
     putpixel(x,y,res);
     return res;
 }
+
+void drawrow(int y,bool usecache){
+    for(int i=0;i<width;i++){
+        calcpixel(i,y,1);
+    }
+}
+
 int getpixel(int x,int y,bool fill=0){
     return results[y*width+x];
 }
@@ -95,6 +109,7 @@ EMSCRIPTEN_BINDINGS(mandelbrot){
     emscripten::function("getCoords",&getcoords);
     emscripten::function("getFromPalette",&getcol);
     emscripten::function("calcPixel",&calcpixel);
+    emscripten::function("calcRow",&drawrow);
 
     emscripten::function("updateCoords",&updcoords);
 

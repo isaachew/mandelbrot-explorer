@@ -11,24 +11,25 @@ var resPtr=null,resultsArray=null
 
 async function render(){
     console.log("wasm loaded")
-    console.time("mandelbrot")
     var colarr=new Uint32Array(idata.data.buffer)
     var pnow=performance.now()
     for(var y=0;y<height;y++){
-        for(var x=0;x<width;x++){
-            Module.calcPixel(x,y)
-        }
-        idata.data.set(resultsArray,0)
-        context.putImageData(idata,0,0)
+        Module.calcRow(y,1)
 
         var nnow=performance.now()
-        if(nnow>pnow+16){
+        if(nnow>pnow+60){
+
+            idata.data.set(resultsArray,0)
+            context.putImageData(idata,0,0)
+
             await new Promise(a=>setTimeout(a))
             pnow=nnow
         }
     }
+
+    idata.data.set(resultsArray,0)
+    context.putImageData(idata,0,0)
     console.log("put img data")
-    console.timeEnd("mandelbrot")
 }
 
 function initModule(){
