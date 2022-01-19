@@ -96,11 +96,10 @@ void init(int wid,int hei){
 }
 
 EMSCRIPTEN_BINDINGS(cmplx){
-    emscripten::class_<std::complex<double>> cmplx("complex");//will be complex in JavaScript
-    cmplx.constructor<>();
-    cmplx.constructor<double,double>();
-    cmplx.property("real",emscripten::select_overload<double()const>(&std::complex<double>::real));
-    cmplx.property("imag",emscripten::select_overload<double()const>(&std::complex<double>::imag));
+    emscripten::value_array<std::complex<double>> cmplx("complex");
+    cmplx.element(emscripten::select_overload<double()const>(&std::complex<double>::real),emscripten::select_overload<void(double)>(&std::complex<double>::real));
+    cmplx.element(emscripten::select_overload<double()const>(&std::complex<double>::imag),emscripten::select_overload<void(double)>(&std::complex<double>::imag));
+
 }
 EMSCRIPTEN_BINDINGS(mandelbrot){
     emscripten::function("init",&init);

@@ -62,14 +62,12 @@ document.getElementById("render").addEventListener("mousedown",e=>{
         scale*=2
     }
     Module.updateCoords(coords,scale)
-    coords.delete()
     render()
 })
 document.getElementById("render").addEventListener("keydown",e=>{
-    var coords=Module.getCoords(450,450)
+    var coords=Module.getCoords(width/2,height/2)
     scale*=.01
     Module.updateCoords(coords,scale)
-    coords.delete()
     render()
     e.preventDefault()
 })
