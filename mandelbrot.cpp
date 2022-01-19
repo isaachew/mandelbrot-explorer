@@ -24,7 +24,7 @@ int numits(std::complex<double> c){
     }
     return -1;
 }
-/*/
+*/
 int numits(std::complex<double> c){
     double zx=0,zy=0;
     for(int i=0;i<maxiters;i++){
@@ -35,7 +35,7 @@ int numits(std::complex<double> c){
     }
     return -1;
 }
-//*/
+
 std::complex<double> getcoords(int x,int y){
     double xoff=(x-width*.5)/width;
     double yoff=(y-height*.5)/width;
