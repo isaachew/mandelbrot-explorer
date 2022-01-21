@@ -8,15 +8,22 @@ let idata=context.createImageData(width,height)
 
 
 var resPtr=null,resultsArray=null
+function getcol(x){
+    if(x==-1)return 0
+    return 255|((x&128?~(x<<1):x<<1)&255)<<8
+}
 
 async function render(){
     var start,pnow,nnow
     start=pnow=performance.now()
-
+    var colarr=new Uint32Array(idata.data.buffer)
     var lrow=0
     for(var y=0;y<height;y++){
-        Module.calcRow(y,1)
-
+        var row=await Mandelbrot.calcRow(y,1)
+        for(var x=0;x<width;x++){
+            colarr[y*width+x]=-16777216|getcol(row[x])
+        }
+        /*
 
         nnow=performance.now()
         if(nnow>pnow+100){
@@ -31,9 +38,10 @@ async function render(){
 
             pnow=nnow
         }
+        */
     }
 
-    idata.data.set(resultsArray,0)
+    //idata.data.set(resultsArray,0)
     context.putImageData(idata,0,0)
     console.log("put img data")
     nnow=performance.now()
@@ -43,17 +51,19 @@ async function render(){
 function initModule(){
 
     console.log("wasm + webpage loaded")
-    Module.init(width,height)
+    //Module.init(width,height)
 
-    resPtr=Module.getImgArray()
-    resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
+    //resPtr=Module.getImgArray()
+    //resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
+    Mandelbrot.updateCoords(cx,cy,scale)
+    Mandelbrot.start()
     render()
 }
 document.getElementById("render").addEventListener("contextmenu",e=>{
     e.preventDefault()
 })
 document.getElementById("render").addEventListener("mousedown",e=>{
-    var coords=Module.getCoords(e.offsetX,e.offsetY)
+    var coords=Mandelbrot.getCoords(e.offsetX,e.offsetY)
     switch(e.button){
         case 0:
         scale/=2
@@ -61,15 +71,19 @@ document.getElementById("render").addEventListener("mousedown",e=>{
         case 2:
         scale*=2
     }
-    Module.updateCoords(coords,scale)
+    Mandelbrot.updateCoords(...coords,scale)
+    Mandelbrot.start()
+    render()
     render()
 })
 document.getElementById("render").addEventListener("keydown",e=>{
-    var coords=Module.getCoords(width/2,height/2)
+    var coords=Mandelbrot.getCoords(width/2,height/2)
     scale*=.01
-    Module.updateCoords(coords,scale)
+    Mandelbrot.updateCoords(...coords,scale)
+    Mandelbrot.start()
     render()
     e.preventDefault()
 })
-if(initialised)initModule()
-else Module.onRuntimeInitialized=initModule
+initModule()
+//if(initialised)
+//else Module.onRuntimeInitialized=initModule

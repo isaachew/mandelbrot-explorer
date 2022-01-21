@@ -3,13 +3,13 @@
     <head>
         <script>
             var initialised=false
-            var Module={
+            var Mandelbrot={
                 onRuntimeInitialized:()=>{
                     initialised=true
                 }
             }
         </script>
-        <script src="mandelbrot/mandelbrot-wasm.js"></script>
+        <script src="mandelbrot/workers/mandelbrot.js"></script>
         <script src="main.js" defer></script>
         <title>Mandelbrot Explorer</title>
     </head>
