@@ -36,15 +36,15 @@ Mandelbrot.updateCoords=(a,b,c)=>{
     for(var i=0;i<4;i++){
         workers[i].postMessage({type:0,cx:a,cy:b,depth:c})
     }
-    complete=0
-    proms=[]
-    data=[]
 }
 
 Mandelbrot.start=a=>{
     for(var i=0;i<4;i++){
         workers[i].postMessage({type:1,row:complete++})
     }
+    complete=0
+    proms=[]
+    data=[]
 }
 Mandelbrot.calcRow=a=>{
     if(!data[a])return new Promise(r=>proms[a]=r)

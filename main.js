@@ -63,7 +63,8 @@ document.getElementById("render").addEventListener("contextmenu",e=>{
     e.preventDefault()
 })
 document.getElementById("render").addEventListener("mousedown",e=>{
-    var coords=Mandelbrot.getCoords(e.offsetX,e.offsetY)
+    var coords=Mandelbrot.getCoords(e.offsetX,e.offsetY);
+    [cx,cy]=coords
     switch(e.button){
         case 0:
         scale/=2
