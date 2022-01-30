@@ -72,9 +72,9 @@ document.getElementById("render").addEventListener("mousedown",e=>{
         case 2:
         scale*=2
     }
+    document.getElementById("coordsdisp").textContent=cx+(cy>0?"+":"")+cy+"i"
     Mandelbrot.updateCoords(...coords,scale)
     Mandelbrot.start()
-    render()
     render()
 })
 document.getElementById("render").addEventListener("keydown",e=>{
@@ -88,3 +88,24 @@ document.getElementById("render").addEventListener("keydown",e=>{
 initModule()
 //if(initialised)
 //else Module.onRuntimeInitialized=initModule
+
+
+
+
+
+document.getElementById("coordsinp").addEventListener("change",function(e){
+    var val=e.target.value
+    var vss=val.split` `
+    cx=+vss[0]
+    cy=+vss[1]
+    Mandelbrot.updateCoords(cx,cy,scale)
+    Mandelbrot.start()
+    render()
+})
+document.getElementById("depthinp").addEventListener("change",function(e){
+    var val=e.target.value
+    scale=val
+    Mandelbrot.updateCoords(cx,cy,scale)
+    Mandelbrot.start()
+    render()
+})

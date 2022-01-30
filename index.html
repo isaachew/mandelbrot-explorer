@@ -11,10 +11,14 @@
         </script>
         <script src="mandelbrot/workers/mandelbrot.js"></script>
         <script src="main.js" defer></script>
+        <link rel="stylesheet" href="index.css">
         <title>Mandelbrot Explorer</title>
     </head>
     <body>
         <canvas id="render" width="800" height="600" tabindex="0"></canvas>
+        Current coordinates: <span id="coordsdisp"></span><br>
+        Go to coordinates: <input id="coordsinp">
+        Zoom to depth: <input id="depthinp">
         Instructions: Left click to zoom in, right click to zoom out
 
 
