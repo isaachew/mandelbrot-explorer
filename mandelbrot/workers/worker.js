@@ -1,5 +1,5 @@
 var notify=()=>{}
-var cx=0,cy=0,depth=1
+var dims={cx:0,cy:0,depth:1,width:800,height:600}
 var curval=null
 onmessage=function(mess){
     //console.log(mess)
@@ -7,7 +7,7 @@ onmessage=function(mess){
         curval=mess.data
         notify()
     }else{
-        [cx,cy,depth]=[mess.data.cx,mess.data.cy,mess.data.depth]
+        Object.assign(dims,mess.data.update)
     }
 }
 
@@ -16,14 +16,14 @@ async function wait(){
     notify=()=>{}
 }
 function getcoords(x,y){
-    return [(x-400)/800*depth+cx,(y-300)/800*depth+cy]
+    return [(x-dims.width/2)/dims.width*dims.depth+dims.cx,(y-dims.height/2)/dims.width*dims.depth+dims.cy]
 }
 
 function numits(cx,cy){
     var zx=0,zy=0
     for(var j=0;j<1000;j++){
         var zxs=zx*zx,zys=zy*zy
-        if(zxs+zys>4)return j
+        if(zxs+zys>16)return j
         zy=2*zx*zy+cy
         zx=zxs-zys+cx
     }
@@ -34,8 +34,8 @@ function numits(cx,cy){
     while(1){
         await wait()
         //console.log("notified")
-        var row=new Array(800)
-        for(var i=0;i<800;i++){
+        var row=new Array(dims.width)
+        for(var i=0;i<dims.width;i++){
             row[i]=numits(...getcoords(i,curval.row))
         }
         postMessage({row:curval.row,data:row})

@@ -59,6 +59,11 @@ function initModule(){
     Mandelbrot.start()
     render()
 }
+
+function updateDims(wid,hei){
+    Mandelbrot.updateDims(width=wid,height=hei)
+}
+
 document.getElementById("render").addEventListener("contextmenu",e=>{
     e.preventDefault()
 })

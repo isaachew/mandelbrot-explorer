@@ -3,6 +3,8 @@ Mandelbrot.cx=0
 Mandelbrot.cy=0
 Mandelbrot.numits=0
 Mandelbrot.depth=1
+Mandelbrot.width=800
+Mandelbrot.height=600
 
 
 var data=[]
@@ -18,7 +20,7 @@ for(var i=0;i<4;i++){
         //console.log(e)
         if(proms[e.data.row])proms[e.data.row](e.data.data)
         data[e.data.row]=e.data.data
-        if(complete<600){
+        if(complete<height){
             e.target.postMessage({type:1,row:complete++})
         }
     }
@@ -26,7 +28,17 @@ for(var i=0;i<4;i++){
 
 
 Mandelbrot.getCoords=(x,y)=>{
-    return [(x-400)/800*Mandelbrot.depth+Mandelbrot.cx,(y-300)/800*Mandelbrot.depth+Mandelbrot.cy]
+    return [(x-Mandelbrot.width/2)/Mandelbrot.width*Mandelbrot.depth+Mandelbrot.cx,(y-Mandelbrot.height/2)/Mandelbrot.width*Mandelbrot.depth+Mandelbrot.cy]
+}
+
+Mandelbrot.updateDims=(a,b)=>{
+    Mandelbrot.width=a
+    Mandelbrot.height=b
+    canvas.width=a
+    canvas.height=b
+    for(var i=0;i<4;i++){
+        workers[i].postMessage({type:0,update:{width:a,height:b}})
+    }
 }
 
 Mandelbrot.updateCoords=(a,b,c)=>{
@@ -34,7 +46,7 @@ Mandelbrot.updateCoords=(a,b,c)=>{
     Mandelbrot.cy=b
     Mandelbrot.depth=c
     for(var i=0;i<4;i++){
-        workers[i].postMessage({type:0,cx:a,cy:b,depth:c})
+        workers[i].postMessage({type:0,update:{cx:a,cy:b,depth:c}})
     }
 }
 
