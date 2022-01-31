@@ -4,13 +4,19 @@ let context=canvas.getContext("2d")
 let width=canvas.width,height=canvas.height
 let scale=4
 let cx=-1,cy=0
+let paletteId=0
 let idata=context.createImageData(width,height)
 
 
 var resPtr=null,resultsArray=null
 function getcol(x){
     if(x==-1)return 0
-    return 255|((x&128?~(x<<1):x<<1)&255)<<8
+    let progressive=((x&128?~(x<<1):x<<1)&255)
+    var pid=paletteId
+    let cr=[255,0,progressive][(pid/9)%3|0]
+    let cg=[progressive,255,0][(pid/3)%3|0]
+    let cb=[0,progressive,255][pid%3]
+    return (cb<<16)|(cg<<8)|cr
 }
 
 async function render(){
