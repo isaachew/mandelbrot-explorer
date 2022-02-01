@@ -10,14 +10,34 @@ let idata=context.createImageData(width,height)
 
 var resPtr=null,resultsArray=null
 
-let palette={stops:[
-    {position:0,colour:[255,0,0]},
-    {position:0.5,colour:[255,255,0]},
-    {position:1,colour:[255,0,0]}
-]}
+let palette={
+    stops:[
+        {position:0,colour:[255,0,0]},
+        {position:0.5,colour:[255,255,0]},
+        {position:1,colour:[255,0,0]}
+    ],
+    length:150
+}
+function changePalette(){
+    let ncols=1
+    for(;Math.random()<.5;ncols++);
+    ncols=5
+    var randcol=()=>[255*Math.random(),255*Math.random(),255*Math.random()]
+    let endpoints=randcol()
+    let stops=[{position:0,colour:endpoints},{position:1,colour:endpoints}]
+    for(var i=0;i<ncols;i++){
+        stops.push({position:Math.random(),colour:randcol()})
+    }
+    stops.sort((a,b)=>a.position-b.position)
+    palette.stops=stops
+
+    Mandelbrot.start()
+    render()
+}
+
 function getcol(x){
     if(x==-1)return 0
-    let progress=x%256/256
+    let progress=x%palette.length/palette.length
     let palind=palette.stops.findIndex(a=>a.position>progress)
     let colprog=(progress-palette.stops[palind-1].position)/(palette.stops[palind].position-palette.stops[palind-1].position)
     let cr=palette.stops[palind].colour[0]*colprog+palette.stops[palind-1].colour[0]*(1-colprog)
