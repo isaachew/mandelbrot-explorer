@@ -9,13 +9,20 @@ let idata=context.createImageData(width,height)
 
 
 var resPtr=null,resultsArray=null
+
+let palette={stops:[
+    {position:0,colour:[255,0,0]},
+    {position:0.5,colour:[255,255,0]},
+    {position:1,colour:[255,0,0]}
+]}
 function getcol(x){
     if(x==-1)return 0
-    let progressive=((x&128?~(x<<1):x<<1)&255)
-    var pid=paletteId
-    let cr=[255,0,progressive][(pid/9)%3|0]
-    let cg=[progressive,255,0][(pid/3)%3|0]
-    let cb=[0,progressive,255][pid%3]
+    let progress=x%256/256
+    let palind=palette.stops.findIndex(a=>a.position>progress)
+    let colprog=(progress-palette.stops[palind-1].position)/(palette.stops[palind].position-palette.stops[palind-1].position)
+    let cr=palette.stops[palind].colour[0]*colprog+palette.stops[palind-1].colour[0]*(1-colprog)
+    let cg=palette.stops[palind].colour[1]*colprog+palette.stops[palind-1].colour[1]*(1-colprog)
+    let cb=palette.stops[palind].colour[2]*colprog+palette.stops[palind-1].colour[2]*(1-colprog)
     return (cb<<16)|(cg<<8)|cr
 }
 
