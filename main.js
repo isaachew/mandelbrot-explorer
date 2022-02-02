@@ -1,7 +1,7 @@
 let canvas=document.getElementById("render")
 let context=canvas.getContext("2d")
 
-let width=canvas.width*devicePixelRatio,height=canvas.height*devicePixelRatio
+let width=canvas.width,height=canvas.height
 let scale=4
 let cx=-1,cy=0
 let paletteId=0
@@ -31,7 +31,20 @@ function changePalette(){
     stops.sort((a,b)=>a.position-b.position)
     palette.stops=stops
 
-    Mandelbrot.start()
+
+    let palcanv=document.getElementById("paletteGradient")
+    let palctx=palcanv.getContext("2d")
+    let grad=palctx.createLinearGradient(0,0,700,0)
+
+    for(var i of palette.stops){
+        grad.addColorStop(i.position,"#"+i.colour.map(a=>(a|0).toString(16).padStart(2,0)).join``)
+    }
+    palctx.fillStyle=grad
+    palctx.fillRect(0,0,700,25)
+
+
+
+    //Mandelbrot.start()
     render()
 }
 
@@ -154,4 +167,10 @@ document.getElementById("depthInp").addEventListener("change",function(e){
 
 let palcanv=document.getElementById("paletteGradient")
 let palctx=palcanv.getContext("2d")
-palctx.fillRect(0,0,200,25)
+let grad=palctx.createLinearGradient(0,0,700,0)
+
+for(var i of palette.stops){
+    grad.addColorStop(i.position,"#"+i.colour.map(a=>a.toString(16).padStart(2,0)).join``)
+}
+palctx.fillStyle=grad
+palctx.fillRect(0,0,700,25)
