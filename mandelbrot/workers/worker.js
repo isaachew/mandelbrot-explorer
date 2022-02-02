@@ -23,7 +23,7 @@ function numits(cx,cy){
     var zx=0,zy=0
     for(var j=0;j<1000;j++){
         var zxs=zx*zx,zys=zy*zy
-        if(zxs+zys>16)return j
+        if(zxs+zys>4)return j
         zy=2*zx*zy+cy
         zx=zxs-zys+cx
     }

@@ -40,7 +40,7 @@ function changePalette(){
         grad.addColorStop(i.position,"#"+i.colour.map(a=>(a|0).toString(16).padStart(2,0)).join``)
     }
     palctx.fillStyle=grad
-    palctx.fillRect(0,0,700,25)
+    palctx.fillRect(0,0,700,30)
 
 
 
@@ -168,9 +168,9 @@ document.getElementById("depthInp").addEventListener("change",function(e){
 let palcanv=document.getElementById("paletteGradient")
 let palctx=palcanv.getContext("2d")
 let grad=palctx.createLinearGradient(0,0,700,0)
-
+document.getElementById("paletteLength").textContent=palette.length
 for(var i of palette.stops){
     grad.addColorStop(i.position,"#"+i.colour.map(a=>a.toString(16).padStart(2,0)).join``)
 }
 palctx.fillStyle=grad
-palctx.fillRect(0,0,700,25)
+palctx.fillRect(0,0,700,30)
