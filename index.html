@@ -16,11 +16,17 @@
     </head>
     <body>
         <canvas id="render" width="800" height="600" tabindex="0"></canvas>
-        Current coordinates: <span id="coordsdisp"></span><br>
-        Go to coordinates: <input id="coordsinp">
-        Zoom to depth: <input id="depthinp">
+        Current coordinates: <span id="coordsDisp"></span><br>
+        Go to coordinates: <input id="coordsInp">
+        Zoom to depth: <input id="depthInp">
         Instructions: Left click to zoom in, right click to zoom out
-        <button onclick="changePalette()">Change palette</button>
+        <button id="editPalette">Edit palette</button>
+        <div id="paletteEditor" style="display:block">
+            <div id="paletteDisplay">
+                <canvas id="paletteGradient" width="700" height="50"></canvas>
+                <div id="colStops"></div>
+            </div>
 
+        </div>
     </body>
 </html>

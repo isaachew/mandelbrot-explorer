@@ -20,7 +20,7 @@ for(var i=0;i<4;i++){
         //console.log(e)
         if(proms[e.data.row])proms[e.data.row](e.data.data)
         data[e.data.row]=e.data.data
-        if(complete<height){
+        if(complete<Mandelbrot.height){
             e.target.postMessage({type:1,row:complete++})
         }
     }

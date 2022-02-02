@@ -1,7 +1,7 @@
 let canvas=document.getElementById("render")
 let context=canvas.getContext("2d")
 
-let width=canvas.width,height=canvas.height
+let width=canvas.width*devicePixelRatio,height=canvas.height*devicePixelRatio
 let scale=4
 let cx=-1,cy=0
 let paletteId=0
@@ -88,13 +88,17 @@ function initModule(){
 
     //resPtr=Module.getImgArray()
     //resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
+    Mandelbrot.updateDims(width,height)
     Mandelbrot.updateCoords(cx,cy,scale)
     Mandelbrot.start()
     render()
 }
 
 function updateDims(wid,hei){
+    idata=context.createImageData(wid,hei)
     Mandelbrot.updateDims(width=wid,height=hei)
+    Mandelbrot.start()
+    render()
 }
 
 document.getElementById("render").addEventListener("contextmenu",e=>{
@@ -110,7 +114,7 @@ document.getElementById("render").addEventListener("mousedown",e=>{
         case 2:
         scale*=2
     }
-    document.getElementById("coordsdisp").textContent=cx+(cy>0?"+":"")+cy+"i"
+    document.getElementById("coordsDisp").textContent=cx+(cy>0?"+":"")+cy+"i"
     Mandelbrot.updateCoords(...coords,scale)
     Mandelbrot.start()
     render()
@@ -131,7 +135,7 @@ initModule()
 
 
 
-document.getElementById("coordsinp").addEventListener("change",function(e){
+document.getElementById("coordsInp").addEventListener("change",function(e){
     var val=e.target.value
     var vss=val.split` `
     cx=+vss[0]
@@ -140,10 +144,14 @@ document.getElementById("coordsinp").addEventListener("change",function(e){
     Mandelbrot.start()
     render()
 })
-document.getElementById("depthinp").addEventListener("change",function(e){
+document.getElementById("depthInp").addEventListener("change",function(e){
     var val=e.target.value
     scale=val
     Mandelbrot.updateCoords(cx,cy,scale)
     Mandelbrot.start()
     render()
 })
+
+let palcanv=document.getElementById("paletteGradient")
+let palctx=palcanv.getContext("2d")
+palctx.fillRect(0,0,200,25)
