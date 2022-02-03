@@ -11,6 +11,7 @@
         </script>
         <script src="mandelbrot/workers/mandelbrot.js"></script>
         <script src="main.js" defer></script>
+        <script src="palette.js" defer></script>
         <link rel="stylesheet" href="index.css">
         <title>Mandelbrot Explorer</title>
     </head>
@@ -21,7 +22,7 @@
         Zoom to depth: <input id="depthInp">
         Instructions: Left click to zoom in, right click to zoom out
         <button id="editPalette">Edit palette</button>
-        <button onclick="changePalette()">Random palette</button>
+        <button onclick="randomPalette()">Random palette</button>
         <div id="paletteEditor" style="display:block">
             Palette Editor
             <div id="paletteDisplay">

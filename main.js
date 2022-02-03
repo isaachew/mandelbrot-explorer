@@ -22,22 +22,6 @@ let palette={
     ],
     length:256
 }
-function changePalette(){
-    let ncols=1
-    for(;Math.random()<.5;ncols++);
-    ncols=5
-    var randcol=()=>[255*Math.random(),255*Math.random(),255*Math.random()]
-    let endpoints=randcol()
-    let stops=[{position:0,colour:endpoints},{position:1,colour:endpoints}]
-    for(var i=0;i<ncols;i++){
-        stops.push({position:Math.random(),colour:randcol()})
-    }
-    stops.sort((a,b)=>a.position-b.position)
-    palette.stops=stops
-    dispPalette()
-    //Mandelbrot.start()
-    render()
-}
 
 function getcol(x){
     if(x==-1)return 0
@@ -155,38 +139,3 @@ document.getElementById("depthInp").addEventListener("change",function(e){
     Mandelbrot.start()
     render()
 })
-
-function dispPalette(){
-    let palcanv=document.getElementById("paletteGradient")
-    let palctx=palcanv.getContext("2d")
-    let grad=palctx.createLinearGradient(0,0,700,0)
-
-    document.getElementById("paletteLength").textContent=palette.length
-    document.getElementById("colStops").innerHTML=""
-    for(var ind=0;ind<palette.stops.length;ind++){
-        var i=palette.stops[ind]
-        let csscol="#"+i.colour.map(a=>(a|0).toString(16).padStart(2,0)).join``
-        grad.addColorStop(i.position,csscol)
-        let dvel=document.createElement("div")
-        dvel.classList.add("colstop")
-        dvel.style.left=i.position*700+"px"
-        dvel.style.backgroundColor=csscol
-        dvel.textContent="\u00a0"
-        dvel.setAttribute("a",ind)
-        dvel.addEventListener("mousemove",e=>{
-            let offset=e.pageX-e.target.parentElement.offsetLeft
-            if(offset<0)offset=0
-            if(offset>700)offset=700
-            palette.stops[e.target.getAttribute("a")].position=offset/700
-            dvel.style.left=offset+"px"
-
-            palette.stops.sort((a,b)=>a.position-b.position)
-            dispPalette()
-        })
-        document.getElementById("colStops").append(dvel)
-    }
-    palctx.fillStyle=grad
-    palctx.fillRect(0,0,700,30)
-}
-
-dispPalette()
