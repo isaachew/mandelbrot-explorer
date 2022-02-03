@@ -13,10 +13,14 @@ var resPtr=null,resultsArray=null
 let palette={
     stops:[
         {position:0,colour:[255,0,0]},
-        {position:0.5,colour:[255,255,0]},
+        {position:1/6,colour:[255,255,0]},
+        {position:1/3,colour:[0,255,0]},
+        {position:.5,colour:[0,255,255]},
+        {position:2/3,colour:[0,0,255]},
+        {position:5/6,colour:[255,0,255]},
         {position:1,colour:[255,0,0]}
     ],
-    length:150
+    length:256
 }
 function changePalette(){
     let ncols=1
@@ -30,20 +34,7 @@ function changePalette(){
     }
     stops.sort((a,b)=>a.position-b.position)
     palette.stops=stops
-
-
-    let palcanv=document.getElementById("paletteGradient")
-    let palctx=palcanv.getContext("2d")
-    let grad=palctx.createLinearGradient(0,0,700,0)
-
-    for(var i of palette.stops){
-        grad.addColorStop(i.position,"#"+i.colour.map(a=>(a|0).toString(16).padStart(2,0)).join``)
-    }
-    palctx.fillStyle=grad
-    palctx.fillRect(0,0,700,30)
-
-
-
+    dispPalette()
     //Mandelbrot.start()
     render()
 }
@@ -165,12 +156,37 @@ document.getElementById("depthInp").addEventListener("change",function(e){
     render()
 })
 
-let palcanv=document.getElementById("paletteGradient")
-let palctx=palcanv.getContext("2d")
-let grad=palctx.createLinearGradient(0,0,700,0)
-document.getElementById("paletteLength").textContent=palette.length
-for(var i of palette.stops){
-    grad.addColorStop(i.position,"#"+i.colour.map(a=>a.toString(16).padStart(2,0)).join``)
+function dispPalette(){
+    let palcanv=document.getElementById("paletteGradient")
+    let palctx=palcanv.getContext("2d")
+    let grad=palctx.createLinearGradient(0,0,700,0)
+
+    document.getElementById("paletteLength").textContent=palette.length
+    document.getElementById("colStops").innerHTML=""
+    for(var ind=0;ind<palette.stops.length;ind++){
+        var i=palette.stops[ind]
+        let csscol="#"+i.colour.map(a=>(a|0).toString(16).padStart(2,0)).join``
+        grad.addColorStop(i.position,csscol)
+        let dvel=document.createElement("div")
+        dvel.classList.add("colstop")
+        dvel.style.left=i.position*700+"px"
+        dvel.style.backgroundColor=csscol
+        dvel.textContent="\u00a0"
+        dvel.setAttribute("a",ind)
+        dvel.addEventListener("mousemove",e=>{
+            let offset=e.pageX-e.target.parentElement.offsetLeft
+            if(offset<0)offset=0
+            if(offset>700)offset=700
+            palette.stops[e.target.getAttribute("a")].position=offset/700
+            dvel.style.left=offset+"px"
+
+            palette.stops.sort((a,b)=>a.position-b.position)
+            dispPalette()
+        })
+        document.getElementById("colStops").append(dvel)
+    }
+    palctx.fillStyle=grad
+    palctx.fillRect(0,0,700,30)
 }
-palctx.fillStyle=grad
-palctx.fillRect(0,0,700,30)
+
+dispPalette()

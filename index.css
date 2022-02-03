@@ -1,3 +1,13 @@
 #render{
     display: block;
 }
+#colStops{
+    margin:0;
+    position:relative
+}
+.colstop{
+    position:absolute;
+    width:15px;
+    height:15px;
+    transform:translateX(-7.5px)
+}
