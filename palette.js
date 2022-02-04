@@ -1,3 +1,6 @@
+function hexToRGB(st){
+    return [parseInt(st.slice(1,3),16),parseInt(st.slice(3,5),16),parseInt(st.slice(5,7),16)]
+}
 
 function randomPalette(){
     let ncols=1
@@ -33,7 +36,7 @@ function updateGradient(){
     palctx.fillStyle=grad
     palctx.fillRect(0,0,700,30)
 }
-
+let lastUpdate=performance.now()
 function updateHandles(){
     document.getElementById("colStops").innerHTML=""
     for(var ind=0;ind<palette.stops.length;ind++){
@@ -49,14 +52,20 @@ function updateHandles(){
         dvel.addEventListener("dragstart",e=>{})
         dvel.addEventListener("drag",e=>{
             if(e.screenX==e.clientX&&e.clientX==0)return
-            let offset=e.clientX-dvel.parentElement.offsetLeft
+            let offset=e.clientX-document.getElementById("colStops").offsetLeft
             if(offset<0)offset=0
             if(offset>700)offset=700
             palette.stops[dvel.getAttribute("a")].position=offset/700
             dvel.style.left=offset+"px"
 
-            //palette.stops.sort((a,b)=>a.position-b.position)
+            palette.stops.sort((a,b)=>a.position-b.position)
             updateGradient()
+            let updTime=performance.now()
+            if(updTime-lastUpdate>100){
+                console.log(updTime)
+                render()
+                lastUpdate=updTime
+            }
             //updateHandles()
         })
         document.getElementById("colStops").append(dvel)
@@ -65,9 +74,7 @@ function updateHandles(){
 
 
 document.addEventListener("dragover",function(e){
-    console.log("dragover")
     e.preventDefault()
-    e.dataTransfer.dropEffect="move"
 })
 document.addEventListener("dragend",function(e){
     e.preventDefault()
