@@ -19,7 +19,7 @@ function randomPalette(){
     render()
 }
 
-let selectedStop=null
+let selStop=null
 function updateGradient(){
     let palcanv=document.getElementById("paletteGradient")
     let palctx=palcanv.getContext("2d")
@@ -52,7 +52,7 @@ function updateHandles(){
         dvel.setAttribute("a",ind)
         dvel.draggable=true
         dvel.addEventListener("dragstart",e=>{
-            selectedStop=curIndex
+            selStop=curIndex
         })
         document.getElementById("colStops").append(dvel)
     }
@@ -60,22 +60,28 @@ function updateHandles(){
 
 document.getElementById("paletteDisplay").addEventListener("dragover",e=>{
     e.preventDefault()
-    console.log(e.dataTransfer.getData("text/plain"),e.target)
+
+    let palStops=palette.stops
     if(e.screenX==e.clientX&&e.clientX==0)return
     let offset=e.clientX-document.getElementById("colStops").offsetLeft
     if(offset<0)offset=0
     if(offset>700)offset=700
 
-    let newPos=palette.stops[selectedStop].position=offset/700
-    document.getElementById("paletteStop"+selectedStop).style.left=offset+"px"
+    let newPos=palStops[selStop].position=offset/700
+    document.getElementById("paletteStop"+selStop).style.left=offset+"px"
 
 
-    let newIndex=palette.stops.findIndex(a=>a.position>newPos)
-    if(newIndex>selectedStop)newIndex--
-    selectedStop=newIndex
-    palette.stops.sort((a,b)=>a.position-b.position)
+    let newIndex=palStops.findIndex(a=>a.position>newPos)
+    if(newIndex>selStop)newIndex--
+
+    if(palStops[selStop].position<palStops[selStop-1].position
+        ||
+    palStops[selStop].position>palStops[selStop+1].position){
+        selStop=newIndex
+        palStops.sort((a,b)=>a.position-b.position)
+        updateHandles()
+    }
     updateGradient()
-    updateHandles()
 
     let updTime=performance.now()
     if(updTime-lastUpdate>50){
