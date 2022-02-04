@@ -57,8 +57,8 @@ function updateHandles(){
         document.getElementById("colStops").append(dvel)
     }
 }
-
-document.getElementById("paletteDisplay").addEventListener("dragover",e=>{
+let palDisp=document.getElementById("paletteDisplay")
+palDisp.addEventListener("dragover",e=>{
     e.preventDefault()
 
     let palStops=palette.stops
@@ -91,10 +91,7 @@ document.getElementById("paletteDisplay").addEventListener("dragover",e=>{
     //updateHandles()
 })
 
-document.addEventListener("dragover",function(e){
-    e.preventDefault()
-})
-document.addEventListener("dragend",function(e){
+palDisp.addEventListener("dragend",function(e){
     e.preventDefault()
     palette.stops.sort((a,b)=>a.position-b.position)
     updateHandles()
