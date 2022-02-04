@@ -9,5 +9,6 @@
     position:absolute;
     width:15px;
     height:15px;
-    transform:translateX(-7.5px)
+    transform:translateX(-7.5px);
+    border:1px solid black
 }
