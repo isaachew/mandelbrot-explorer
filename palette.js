@@ -49,11 +49,15 @@ function updateHandles(){
         let csscol="#"+colStop.colour.map(a=>(a|0).toString(16).padStart(2,0)).join``
         dvel.style.backgroundColor=csscol
         dvel.textContent="\u00a0"
-        dvel.setAttribute("a",ind)
-        dvel.draggable=true
-        dvel.addEventListener("dragstart",e=>{
+        dvel.addEventListener("click",e=>{
             selStop=curIndex
         })
+        if(colStop.position%1){
+            dvel.draggable=true
+            dvel.addEventListener("dragstart",e=>{
+                selStop=curIndex
+            })
+        }
         document.getElementById("colStops").append(dvel)
     }
 }
