@@ -2,6 +2,14 @@ function hexToRGB(st){
     return [parseInt(st.slice(1,3),16),parseInt(st.slice(3,5),16),parseInt(st.slice(5,7),16)]
 }
 
+let requested=false
+function reqRender(){
+    if(!requested){
+        requested=true
+
+    }
+}
+
 function randomPalette(){
     let ncols=1
     for(;Math.random()<.5;ncols++);
@@ -61,6 +69,7 @@ function updateHandles(){
         document.getElementById("colStops").append(dvel)
     }
 }
+
 let palDisp=document.getElementById("paletteDisplay")
 palDisp.addEventListener("dragover",e=>{
     e.preventDefault()
@@ -97,8 +106,17 @@ palDisp.addEventListener("dragover",e=>{
 
 palDisp.addEventListener("dragend",function(e){
     e.preventDefault()
-    palette.stops.sort((a,b)=>a.position-b.position)
     updateHandles()
+    render()
+},true)
+
+document.getElementById("colInput").addEventListener("input",function(e){
+    if(selStop!=null)palette.stops[selStop].colour=hexToRGB(this.value)
+    dispPalette()
+    render()
+})
+document.getElementById("lengthInput").addEventListener("input",function(e){
+    palette.length=+this.value
     render()
 })
 

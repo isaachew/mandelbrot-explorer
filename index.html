@@ -29,8 +29,8 @@
                 <canvas id="paletteGradient" width="700" height="30"></canvas>
                 <div id="colStops" style="height:1em"></div>
             </div>
-            <input type="number" oninput="palette.length=+this.value||palette.length;render()">
-            <input type="color" oninput="palette.stops[2].colour=hexToRGB(this.value);updateHandles(updateGradient(render()))">
+            <input type="number" id="lengthInput">
+            <input type="color" id="colInput">
             Palette Length: <span id="paletteLength"></span>
         </div>
     </body>

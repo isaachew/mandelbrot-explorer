@@ -65,8 +65,8 @@ async function render(){
     //idata.data.set(resultsArray,0)
     context.putImageData(idata,0,0)
     //console.log("put img data")
-    nnow=performance.now()
-    console.log("render in "+1e-3*(nnow-start)+" s")
+    //nnow=performance.now()
+    //console.log("render in "+1e-3*(nnow-start)+" s")
 }
 
 function initModule(){
