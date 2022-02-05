@@ -1,5 +1,14 @@
 function hexToRGB(st){
-    return [parseInt(st.slice(1,3),16),parseInt(st.slice(3,5),16),parseInt(st.slice(5,7),16)]
+    return [
+        parseInt(st.slice(1,3),16),
+        parseInt(st.slice(3,5),16),
+        parseInt(st.slice(5,7),16)
+    ]
+}
+
+function rgbToHex(st){
+    var toHex=comp=>(comp|0).toString(16).padStart(2,0)
+    return "#"+toHex(st[0])+toHex(st[1])+toHex(st[2])
 }
 
 let requested=false
@@ -27,6 +36,7 @@ function randomPalette(){
     render()
 }
 
+
 let selStop=null
 function updateGradient(){
     let palcanv=document.getElementById("paletteGradient")
@@ -53,18 +63,20 @@ function updateHandles(){
         let dvel=document.createElement("div")
         dvel.classList.add("colstop")
         dvel.id="paletteStop"+ind
-        dvel.style.left=colStop.position*700+"px"
         let csscol="#"+colStop.colour.map(a=>(a|0).toString(16).padStart(2,0)).join``
         dvel.style.backgroundColor=csscol
+        dvel.style.left=colStop.position*700+"px"
         dvel.textContent="\u00a0"
-        dvel.addEventListener("click",e=>{
+
+        function selectStop(){
             selStop=curIndex
-        })
-        if(colStop.position%1){
+            document.getElementById("stopOffset").value=palette.stops[curIndex].position
+            document.getElementById("stopColour").value=rgbToHex(palette.stops[curIndex].colour)
+        }
+        dvel.addEventListener("click",selectStop)
+        if(curIndex%(palette.stops.length-1)){
             dvel.draggable=true
-            dvel.addEventListener("dragstart",e=>{
-                selStop=curIndex
-            })
+            dvel.addEventListener("dragstart",selectStop)
         }
         document.getElementById("colStops").append(dvel)
     }
@@ -110,7 +122,12 @@ palDisp.addEventListener("dragend",function(e){
     render()
 },true)
 
-document.getElementById("colInput").addEventListener("input",function(e){
+document.getElementById("stopOffset").addEventListener("input",function(e){
+    if(selStop!=null&&selStop%(palette.stops.length-1))palette.stops[selStop].position=+this.value
+    dispPalette()
+    render()
+})
+document.getElementById("stopColour").addEventListener("input",function(e){
     if(selStop!=null)palette.stops[selStop].colour=hexToRGB(this.value)
     dispPalette()
     render()

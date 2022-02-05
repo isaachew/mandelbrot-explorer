@@ -139,3 +139,7 @@ document.getElementById("depthInp").addEventListener("change",function(e){
     Mandelbrot.start()
     render()
 })
+
+document.getElementById("editPalette").addEventListener("click",function(){
+    document.getElementById("paletteEditor").style.display="block"
+})
