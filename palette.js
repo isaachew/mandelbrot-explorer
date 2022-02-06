@@ -82,6 +82,27 @@ function updateHandles(){
     }
 }
 
+function moveColourStop(index,position){
+
+    let palStops=palette.stops
+    document.getElementById("paletteStop"+selStop).style.left=position*700+"px"
+
+
+    let newIndex=palStops.findIndex((a,b)=>b>index?a.position>=position:a.position>position)
+    if(newIndex>index)newIndex--
+
+    palStops[index].position=position
+
+    if(palStops[index].position<palStops[index-1].position
+        ||
+    palStops[index].position>palStops[index+1].position){
+        palStops.sort((a,b)=>a.position-b.position)
+        updateHandles()
+    }
+    updateGradient()
+    return newIndex
+}
+
 let palDisp=document.getElementById("paletteDisplay")
 palDisp.addEventListener("dragover",e=>{
     e.preventDefault()
@@ -92,21 +113,8 @@ palDisp.addEventListener("dragover",e=>{
     if(offset<0)offset=0
     if(offset>700)offset=700
 
-    let newPos=palStops[selStop].position=offset/700
-    document.getElementById("paletteStop"+selStop).style.left=offset+"px"
-
-
-    let newIndex=palStops.findIndex(a=>a.position>newPos)
-    if(newIndex>selStop)newIndex--
-
-    if(palStops[selStop].position<palStops[selStop-1].position
-        ||
-    palStops[selStop].position>palStops[selStop+1].position){
-        selStop=newIndex
-        palStops.sort((a,b)=>a.position-b.position)
-        updateHandles()
-    }
-    updateGradient()
+    let newPos=offset/700
+    selStop=moveColourStop(selStop,newPos)
 
     let updTime=performance.now()
     if(updTime-lastUpdate>50){
@@ -123,7 +131,9 @@ palDisp.addEventListener("dragend",function(e){
 },true)
 
 document.getElementById("stopOffset").addEventListener("input",function(e){
-    if(selStop!=null&&selStop%(palette.stops.length-1))palette.stops[selStop].position=+this.value
+    if(selStop!=null&&selStop%(palette.stops.length-1)){
+        if(this.value>=0&&this.value<=1)moveColourStop(selStop,+this.value)
+    }
     dispPalette()
     render()
 })
