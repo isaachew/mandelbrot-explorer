@@ -96,7 +96,8 @@ function moveColourStop(index,position){
     if(palStops[index].position<palStops[index-1].position
         ||
     palStops[index].position>palStops[index+1].position){
-        palStops.sort((a,b)=>a.position-b.position)
+        let oldEl=palStops.splice(index,1)[0]
+        palStops.splice(newIndex,0,oldEl)
         updateHandles()
     }
     updateGradient()
@@ -132,7 +133,7 @@ palDisp.addEventListener("dragend",function(e){
 
 document.getElementById("stopOffset").addEventListener("input",function(e){
     if(selStop!=null&&selStop%(palette.stops.length-1)){
-        if(this.value>=0&&this.value<=1)moveColourStop(selStop,+this.value)
+        if(this.value>=0&&this.value<=1)selStop=moveColourStop(selStop,+this.value)
     }
     dispPalette()
     render()
