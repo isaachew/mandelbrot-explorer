@@ -1,5 +1,5 @@
 var notify=()=>{}
-var dims={cx:0,cy:0,depth:1,width:800,height:600}
+var dims={cx:0,cy:0,depth:1,width:800,height:600,iters:1000}
 var curval=null
 onmessage=function(mess){
     //console.log(mess)
@@ -21,7 +21,7 @@ function getcoords(x,y){
 
 function numits(cx,cy){
     var zx=0,zy=0
-    for(var j=0;j<1000;j++){
+    for(var j=0;j<dims.iters;j++){
         var zxs=zx*zx,zys=zy*zy
         if(zxs+zys>4)return j
         zy=2*zx*zy+cy

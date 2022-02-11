@@ -49,6 +49,11 @@ Mandelbrot.updateCoords=(a,b,c)=>{
         workers[i].postMessage({type:0,update:{cx:a,cy:b,depth:c}})
     }
 }
+Mandelbrot.updateWorkers=obj=>{
+    for(var i=0;i<4;i++){
+        workers[i].postMessage({type:0,update:obj})
+    }
+}
 
 Mandelbrot.start=a=>{
     for(var i=0;i<4;i++){
