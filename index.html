@@ -16,28 +16,40 @@
         <title>Mandelbrot Explorer</title>
     </head>
     <body>
-        <canvas id="render" width="800" height="600" tabindex="0"></canvas>
-        Current coordinates: <span id="coordsDisp"></span><br>
-        Go to coordinates: <input id="coordsInp">
-        Zoom to depth: <input id="depthInp">
-        Instructions: Left click to zoom in, right click to zoom out
-        <div>
-            <button id="editPalette">Edit palette</button>
-            <button onclick="randomPalette()">Random palette</button>
-            <div id="paletteEditor" style="display:none">
-                <h3>Palette Editor</h3>
-                <div id="paletteDisplay">
-                    <canvas id="paletteGradient" width="700" height="30"></canvas>
-                    <div id="colStops" style="height:1em"></div>
+        <div id="maincontent">
+            <div id="top">
+
+            </div>
+            <div id="mid">
+                <div id="canvcontainer">
+                    <canvas id="render" width="800" height="600" tabindex="0"></canvas>
                 </div>
-                <div id="curStop">
-                    Current Stop
-                    <br>
-                    Stop offset: <input type="number" min="0" max="1" step=".01" id="stopOffset"><br>
-                    Stop colour: <input type="color" id="stopColour">
+                <div id="sidebar"></div>
+            </div>
+            <div id="bottom">
+                Current coordinates: <span id="coordsDisp"></span><br>
+                Go to coordinates: <input id="coordsInp">
+                Zoom to depth: <input id="depthInp">
+                Instructions: Left click to zoom in, right click to zoom out
+                <div>
+                    <button id="editPalette">Edit palette</button>
+                    <button onclick="randomPalette()">Random palette</button>
+                    <div id="paletteEditor" style="display:none">
+                        <h3>Palette Editor</h3>
+                        <div id="paletteDisplay">
+                            <canvas id="paletteGradient" width="700" height="30"></canvas>
+                            <div id="colStops" style="height:1em"></div>
+                        </div>
+                        <div id="curStop">
+                            Current Stop
+                            <br>
+                            Stop offset: <input type="number" min="0" max="1" step=".01" id="stopOffset"><br>
+                            Stop colour: <input type="color" id="stopColour">
+                        </div>
+                        <input type="number" id="lengthInput">
+                        Palette Length: <span id="paletteLength"></span>
+                    </div>
                 </div>
-                <input type="number" id="lengthInput">
-                Palette Length: <span id="paletteLength"></span>
             </div>
         </div>
     </body>

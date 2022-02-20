@@ -3,3 +3,7 @@
 - Change colour palette (function, colours)
 - Change max. iterations
 - Perturbation
+
+UI
+- No modals or blocking content
+- Palette editor opens in a separate pane
