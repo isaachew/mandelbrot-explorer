@@ -43,7 +43,7 @@ function updateGradient(){
     let palctx=palcanv.getContext("2d")
     let grad=palctx.createLinearGradient(0,0,700,0)
 
-    document.getElementById("paletteLength").textContent=palette.length
+    document.getElementById("lengthInput").value=palette.length
     for(var ind=0;ind<palette.stops.length;ind++){
         let colStop=palette.stops[ind]
         let csscol="#"+colStop.colour.map(a=>(a|0).toString(16).padStart(2,0)).join``
@@ -109,7 +109,7 @@ palDisp.addEventListener("dragover",e=>{
     e.preventDefault()
 
     let palStops=palette.stops
-    if(e.screenX==e.clientX&&e.clientX==0)return
+    //if(e.screenX==e.clientX&&e.clientX==0)return
     let offset=e.clientX-document.getElementById("colStops").offsetLeft
     if(offset<0)offset=0
     if(offset>700)offset=700

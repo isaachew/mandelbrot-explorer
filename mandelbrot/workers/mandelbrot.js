@@ -11,8 +11,9 @@ var data=[]
 var proms=[]
 var complete=0
 
+var numWorkers=4
 var workers=[]
-for(var i=0;i<4;i++){
+for(var i=0;i<numWorkers;i++){
     var wrk=new Worker("mandelbrot/workers/worker.js")
     workers.push(wrk)
 
@@ -36,7 +37,7 @@ Mandelbrot.updateDims=(a,b)=>{
     Mandelbrot.height=b
     canvas.width=a
     canvas.height=b
-    for(var i=0;i<4;i++){
+    for(var i=0;i<numWorkers;i++){
         workers[i].postMessage({type:0,update:{width:a,height:b}})
     }
 }
@@ -45,18 +46,18 @@ Mandelbrot.updateCoords=(a,b,c)=>{
     Mandelbrot.cx=a
     Mandelbrot.cy=b
     Mandelbrot.depth=c
-    for(var i=0;i<4;i++){
+    for(var i=0;i<numWorkers;i++){
         workers[i].postMessage({type:0,update:{cx:a,cy:b,depth:c}})
     }
 }
 Mandelbrot.updateWorkers=obj=>{
-    for(var i=0;i<4;i++){
+    for(var i=0;i<numWorkers;i++){
         workers[i].postMessage({type:0,update:obj})
     }
 }
 
 Mandelbrot.start=a=>{
-    for(var i=0;i<4;i++){
+    for(var i=0;i<numWorkers;i++){
         workers[i].postMessage({type:1,row:complete++})
     }
     complete=0

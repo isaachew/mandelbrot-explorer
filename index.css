@@ -42,3 +42,13 @@ body{
 #sidebar{
     flex-grow:1
 }
+
+
+#paletteDisplay{
+    margin:auto;
+    width: 700px
+}
+
+#curStop div{
+    flex:1 1
+}

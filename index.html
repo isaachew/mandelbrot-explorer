@@ -22,33 +22,38 @@
             </div>
             <div id="mid">
                 <div id="canvcontainer">
-                    <canvas id="render" width="800" height="600" tabindex="0"></canvas>
+                    <canvas id="render" width="800" height="600" style="height:100%" tabindex="0"></canvas>
                 </div>
                 <div id="sidebar"></div>
             </div>
             <div id="xhandle" style="height:7px;background:#555;cursor:row-resize">&nbsp;</div>
             <div id="bottom">
-                Current coordinates: <span id="coordsDisp"></span><br>
-                Go to coordinates: <input id="coordsInp">
-                Zoom to depth: <input id="depthInp">
-                Instructions: Left click to zoom in, right click to zoom out
+                <div style="display:none">
+                    Current coordinates: <span id="coordsDisp"></span><br>
+                    Go to coordinates: <input id="coordsInp">
+                    Zoom to depth: <input id="depthInp">
+                    Instructions: Left click to zoom in, right click to zoom out
+                </div>
                 <div>
                     <button id="editPalette">Edit palette</button>
                     <button onclick="randomPalette()">Random palette</button>
-                    <div id="paletteEditor" style="display:none">
-                        <h3>Palette Editor</h3>
-                        <div id="paletteDisplay">
-                            <canvas id="paletteGradient" width="700" height="30"></canvas>
-                            <div id="colStops" style="height:1em"></div>
+                    <div id="paletteEditor" style="display:none"><br>
+                        <div style="width:750px;padding-left:15px">
+                            <div id="paletteDisplay">
+                                <canvas id="paletteGradient" width="700" height="30"></canvas>
+                                <div id="colStops" style="height:1em"></div>
+                            </div>
+                            <div id="curStop" style="display:flex;width:700px">
+                                <div>
+                                    Stop offset: <input type="number" min="0" max="1" step=".01" id="stopOffset">
+                                </div>
+                                <div>
+                                    Stop colour: <input type="color" id="stopColour">
+                                </div>
+                            </div>
+
+                            Palette Length: <input type="number" id="lengthInput">
                         </div>
-                        <div id="curStop">
-                            Current Stop
-                            <br>
-                            Stop offset: <input type="number" min="0" max="1" step=".01" id="stopOffset"><br>
-                            Stop colour: <input type="color" id="stopColour">
-                        </div>
-                        <input type="number" id="lengthInput">
-                        Palette Length: <span id="paletteLength"></span>
                     </div>
                 </div>
             </div>
