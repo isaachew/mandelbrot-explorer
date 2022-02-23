@@ -143,3 +143,33 @@ document.getElementById("depthInp").addEventListener("change",function(e){
 document.getElementById("editPalette").addEventListener("click",function(){
     document.getElementById("paletteEditor").style.display="block"
 })
+
+var movehandler=null
+var uphandler=null
+xhandle.addEventListener("mousedown",a=>{//
+    console.log("dragstart")
+    document.addEventListener("mousemove",movehandler=a=>{
+        if(a.clientY==0)return
+        console.log("drag")
+        a.preventDefault()
+        console.log(mid.offsetY,a.clientY)
+        mid.style.height=(a.clientY-mid.offsetTop)+"px"
+        mid.style.overflow="hidden"
+    })
+    document.addEventListener("mouseup",uphandler=a=>{
+        document.removeEventListener("mousemove",movehandler)
+        document.removeEventListener("mouseup",uphandler)
+    })
+    //a.preventDefault()
+})
+/*
+xhandle.addEventListener("mousemove",a=>{
+    if(a.clientY==0)return
+    console.log("drag")
+    a.preventDefault()
+    console.log(mid.offsetY,a.clientY)
+    mid.style.height=(a.clientY-mid.offsetTop)+"px"
+    mid.style.overflow="hidden"
+})
+*/
+//xhandle.addEventListener("dragend",a=>{a.preventDefault()})
