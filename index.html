@@ -24,7 +24,14 @@
                 <div id="canvcontainer">
                     <canvas id="render" width="800" height="600" style="height:100%" tabindex="0"></canvas>
                 </div>
-                <div id="sidebar"></div>
+                <div style="width:7px;background:#555"></div>
+                <div id="sidebar">
+                    <button onclick="saveImg()">Download</button>
+
+                    <div><div class="inpLabel">Iterations:</div><input style="width:70px" type="number" oninput="Mandelbrot.updateWorkers({iters:+this.value|0})"></div>
+                    <div><div class="inpLabel">Width:</div><input style="width:70px" type="number" max="10000" onchange="updateDims(+this.value,Mandelbrot.height)"></div>
+                    <div><div class="inpLabel">Height:</div><input style="width:70px" type="number" max="10000" onchange="updateDims(Mandelbrot.width,+this.value)"></div>
+                </div>
             </div>
             <div id="xhandle" style="height:7px;background:#555;cursor:row-resize">&nbsp;</div>
             <div id="bottom">

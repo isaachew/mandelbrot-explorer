@@ -37,7 +37,7 @@ body{
 }
 #bottom{
     flex-grow:1;
-    overflow-y:scroll
+    overflow-y:auto
 }
 #sidebar{
     flex-grow:1
@@ -46,9 +46,15 @@ body{
 
 #paletteDisplay{
     margin:auto;
-    width: 700px
+    width:700px
 }
 
 #curStop div{
     flex:1 1
+}
+
+.inpLabel{
+    width:70px;
+    display:inline-block;
+    text-align:right
 }

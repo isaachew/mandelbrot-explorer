@@ -83,9 +83,12 @@ function initModule(){
 }
 
 function updateDims(wid,hei){
-    idata=context.createImageData(wid,hei)
-    Mandelbrot.updateDims(width=wid,height=hei)
+    canvas.width=width=wid
+    canvas.height=height=hei
+    Mandelbrot.updateDims(wid,hei)
     Mandelbrot.start()
+
+    idata=context.createImageData(wid,hei)
     render()
 }
 
@@ -153,17 +156,19 @@ var uphandler=null
 xhandle.addEventListener("mousedown",a=>{//
     console.log("dragstart")
     document.addEventListener("mousemove",movehandler=a=>{
-        if(a.clientY==0)return
+        if(a.pageY==0)return
         console.log("drag")
         a.preventDefault()
         console.log(mid.offsetY,a.clientY)
-        mid.style.height=(a.clientY-mid.offsetTop)+"px"
+        mid.style.height=(a.pageY-mid.offsetTop)+"px"
         mid.style.overflow="hidden"
     })
     document.addEventListener("mouseup",uphandler=a=>{
         document.removeEventListener("mousemove",movehandler)
         document.removeEventListener("mouseup",uphandler)
+        //document.body.style.cursor="default"
     })
+    //document.body.style.cursor="row-resize"
     //a.preventDefault()
 })
 /*
@@ -177,3 +182,14 @@ xhandle.addEventListener("mousemove",a=>{
 })
 */
 //xhandle.addEventListener("dragend",a=>{a.preventDefault()})
+
+
+function saveImg(){
+    document.getElementById('render').toBlob(a=>{
+        var link=document.createElement('a')
+        var objUrl=URL.createObjectURL(a)
+        link.href=objUrl
+        link.download="render.png"
+        link.click()
+    },'image/png')
+}

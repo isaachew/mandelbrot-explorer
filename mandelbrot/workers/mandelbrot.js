@@ -35,8 +35,6 @@ Mandelbrot.getCoords=(x,y)=>{
 Mandelbrot.updateDims=(a,b)=>{
     Mandelbrot.width=a
     Mandelbrot.height=b
-    canvas.width=a
-    canvas.height=b
     for(var i=0;i<numWorkers;i++){
         workers[i].postMessage({type:0,update:{width:a,height:b}})
     }
