@@ -21,8 +21,8 @@
 
             </div>
             <div id="mid">
-                <div id="canvcontainer">
-                    <canvas id="render" width="800" height="600" style="height:100%" tabindex="0"></canvas>
+                <div id="canvcontainer" class="vertical">
+                    <canvas id="render" width="800" height="600" tabindex="0"></canvas>
                 </div>
                 <div style="width:7px;background:#555"></div>
                 <div id="sidebar">
@@ -42,9 +42,11 @@
                     Instructions: Left click to zoom in, right click to zoom out
                 </div>
                 <div>
-                    <button id="editPalette">Edit palette</button>
+                    <!--
+                        <button id="editPalette">Edit palette</button>
+                    -->
                     <button onclick="randomPalette()">Random palette</button>
-                    <div id="paletteEditor" style="display:none"><br>
+                    <div id="paletteEditor"><br>
                         <div style="width:750px;padding-left:15px">
                             <div id="paletteDisplay">
                                 <canvas id="paletteGradient" width="700" height="30"></canvas>

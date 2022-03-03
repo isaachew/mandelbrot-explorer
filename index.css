@@ -1,12 +1,23 @@
-@media(prefers-color-scheme:dark){
-    body{
-        background:#222;
-        color:#ccc
-    }
-}
+html{font-family:Arial}
 
+#canvcontainer{
+    width:80%
+}
+#canvcontainer.vertical{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items: center;
+}
 #render{
     display:block
+}
+.horizontal #render{
+    height:100%;
+    margin:auto;
+}
+.vertical #render{
+    width:100%;
 }
 #colStops{
     margin:0;
@@ -64,4 +75,15 @@ body{
     width:70px;
     display:inline-block;
     text-align:right
+}
+@media(prefers-color-scheme:dark){
+    body{
+        background:#222;
+        color:#ccc
+    }
+
+    input{
+        color:#ccc;
+        background:#444;
+    }
 }

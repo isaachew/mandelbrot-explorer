@@ -146,22 +146,35 @@ document.getElementById("depthInp").addEventListener("change",function(e){
     Mandelbrot.start()
     render()
 })
-
+/*
 document.getElementById("editPalette").addEventListener("click",function(){
     document.getElementById("paletteEditor").style.display="block"
 })
-
+*/
 var movehandler=null
 var uphandler=null
 xhandle.addEventListener("mousedown",a=>{//
     console.log("dragstart")
     document.addEventListener("mousemove",movehandler=a=>{
+
         if(a.pageY==0)return
+
         console.log("drag")
         a.preventDefault()
         console.log(mid.offsetY,a.clientY)
-        mid.style.height=(a.pageY-mid.offsetTop)+"px"
+        let yPos=a.pageY
+        if(innerHeight-(yPos+7)<150){
+            yPos=innerHeight-157
+        }
+
+        mid.style.height=(yPos-mid.offsetTop)+"px"
         mid.style.overflow="hidden"
+
+        if(width*canvcontainer.offsetHeight-canvcontainer.offsetWidth*height>0){
+            canvcontainer.className="vertical"
+        }else{
+            canvcontainer.className="horizontal"
+        }
     })
     document.addEventListener("mouseup",uphandler=a=>{
         document.removeEventListener("mousemove",movehandler)
