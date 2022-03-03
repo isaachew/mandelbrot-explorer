@@ -97,9 +97,16 @@ document.getElementById("render").addEventListener("contextmenu",e=>{
 })
 document.getElementById("render").addEventListener("mousedown",e=>{
     let offx=e.offsetX,offy=e.offsetY
-    let midh=+mid.offsetHeight
-    offx/=midh,offy/=midh
-    offx*=e.target.height,offy*=e.target.height
+    let cont=document.getElementById("canvcontainer")
+    let isVertical=e.target.width*cont.offsetHeight-e.target.height*cont.offsetWidth>0
+    let asr
+    if(isVertical){
+        asr=e.target.width/cont.offsetWidth
+    }else{
+        asr=e.target.height/cont.offsetHeight
+    }
+    offx*=asr,offy*=asr
+
     var coords=Mandelbrot.getCoords(offx,offy);
     [cx,cy]=coords
     switch(e.button){
