@@ -76,6 +76,17 @@ body{
     display:inline-block;
     text-align:right
 }
+input:hover{
+    border-color: red
+}
+input{
+    transition: border-color .2s;
+    color:#555;
+    background:#eee;
+    border-width: 0 0 1px;
+    border-style: solid;
+}
+
 @media(prefers-color-scheme:dark){
     body{
         background:#222;

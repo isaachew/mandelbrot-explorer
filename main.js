@@ -44,13 +44,13 @@ async function render(){
         for(var x=0;x<width;x++){
             colarr[y*width+x]=-16777216|getcol(row[x])
         }
-        /*
+        //*
 
         nnow=performance.now()
-        if(nnow>pnow+100){
+        if(nnow>pnow+30){
             //idata.data.set(resultsArray,0)
 
-            idata.data.set(resultsArray.subarray(width*lrow*4,width*(y+1)*4),0)
+            //idata.data.set(resultsArray.subarray(width*lrow*4,width*(y+1)*4),0)
             //context.putImageData(idata,0,0)
             context.putImageData(idata,0,lrow,0,0,width,y+1-lrow)
             row=y+1
@@ -59,7 +59,7 @@ async function render(){
 
             pnow=nnow
         }
-        */
+        //*/
     }
 
     //idata.data.set(resultsArray,0)
