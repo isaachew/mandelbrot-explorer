@@ -76,13 +76,19 @@ function initModule(){
 
     //resPtr=Module.getImgArray()
     //resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
-    Mandelbrot.updateDims(width,height)
+    document.getElementById("mid").style.height=innerHeight-157-document.getElementById("render").offsetTop+"px"
+    updateDims(width,height)
     Mandelbrot.updateCoords(cx,cy,scale)
     Mandelbrot.start()
     render()
 }
 
 function updateDims(wid,hei){
+    if(wid*canvcontainer.offsetHeight-canvcontainer.offsetWidth*hei>0){
+        canvcontainer.className="vertical"
+    }else{
+        canvcontainer.className="horizontal"
+    }
     canvas.width=width=wid
     canvas.height=height=hei
     Mandelbrot.updateDims(wid,hei)
