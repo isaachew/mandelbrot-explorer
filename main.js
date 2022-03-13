@@ -76,9 +76,17 @@ function initModule(){
 
     //resPtr=Module.getImgArray()
     //resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
+    document.body.style.setProperty("--height",innerHeight+"px")
+
     document.getElementById("mid").style.height=innerHeight-157-document.getElementById("render").offsetTop+"px"
     updateDims(width,height)
     Mandelbrot.updateCoords(cx,cy,scale)
+    Mandelbrot.start()
+    render()
+}
+
+function updateCoords(ncx,ncy,ndepth){
+    Mandelbrot.updateCoords(cx=ncx,cy=ncy,depth=ndepth)
     Mandelbrot.start()
     render()
 }
@@ -101,7 +109,7 @@ function updateDims(wid,hei){
 document.getElementById("render").addEventListener("contextmenu",e=>{
     e.preventDefault()
 })
-document.getElementById("render").addEventListener("mousedown",e=>{
+document.getElementById("render").addEventListener("pointerup",e=>{
     let offx=e.offsetX,offy=e.offsetY
     let cont=document.getElementById("canvcontainer")
     let isVertical=e.target.width*cont.offsetHeight-e.target.height*cont.offsetWidth>0
@@ -122,7 +130,7 @@ document.getElementById("render").addEventListener("mousedown",e=>{
         case 2:
         scale*=2
     }
-    document.getElementById("coordsDisp").textContent=cx+(cy>0?"+":"")+cy+"i"
+    //document.getElementById("coordsDisp").textContent=cx+(cy>0?"+":"")+cy+"i"
     Mandelbrot.updateCoords(...coords,scale)
     Mandelbrot.start()
     render()
@@ -135,14 +143,13 @@ document.getElementById("render").addEventListener("keydown",e=>{
     render()
     e.preventDefault()
 })
-initModule()
 //if(initialised)
 //else Module.onRuntimeInitialized=initModule
 
 
 
 
-
+/*
 document.getElementById("coordsInp").addEventListener("change",function(e){
     var val=e.target.value
     var vss=val.split` `
@@ -159,25 +166,23 @@ document.getElementById("depthInp").addEventListener("change",function(e){
     Mandelbrot.start()
     render()
 })
+*/
 /*
 document.getElementById("editPalette").addEventListener("click",function(){
     document.getElementById("paletteEditor").style.display="block"
 })
 */
-var movehandler=null
-var uphandler=null
-xhandle.addEventListener("mousedown",a=>{//
-    console.log("dragstart")
-    document.addEventListener("mousemove",movehandler=a=>{
 
-        if(a.pageY==0)return
+addDrag(xhandle,
+    function(a){
 
+    },
+    function(a){
         console.log("drag")
-        a.preventDefault()
         console.log(mid.offsetY,a.clientY)
-        let yPos=a.pageY
-        if(innerHeight-(yPos+7)<150){
-            yPos=innerHeight-157
+        let yPos=a.pageY-3.5
+        if(innerHeight-yPos-7<150){
+            yPos=innerHeight-150-7
         }
 
         mid.style.height=(yPos-mid.offsetTop)+"px"
@@ -188,15 +193,25 @@ xhandle.addEventListener("mousedown",a=>{//
         }else{
             canvcontainer.className="horizontal"
         }
-    })
-    document.addEventListener("mouseup",uphandler=a=>{
-        document.removeEventListener("mousemove",movehandler)
-        document.removeEventListener("mouseup",uphandler)
-        //document.body.style.cursor="default"
-    })
-    //document.body.style.cursor="row-resize"
-    //a.preventDefault()
+    },
+    function(){
+
+    }
+)
+
+addEventListener("resize",a=>{
+    console.log("resized")
+    document.body.style.setProperty("--height",innerHeight+"px")
+    var mid=document.getElementById("mid")
+    mid.style.height=Math.min(mid.offsetHeight,innerHeight-157-document.getElementById("render").offsetTop)+"px"
+    if(width*canvcontainer.offsetHeight-canvcontainer.offsetWidth*height>0){
+        canvcontainer.className="vertical"
+    }else{
+        canvcontainer.className="horizontal"
+    }
 })
+
+
 /*
 xhandle.addEventListener("mousemove",a=>{
     if(a.clientY==0)return
@@ -219,3 +234,6 @@ function saveImg(){
         link.click()
     },'image/png')
 }
+
+
+initModule()

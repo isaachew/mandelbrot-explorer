@@ -75,8 +75,20 @@ function updateHandles(){
         }
         dvel.addEventListener("click",selectStop)
         if(curIndex%(palette.stops.length-1)){
-            dvel.draggable=true
-            dvel.addEventListener("dragstart",selectStop)
+            addDrag(dvel,selectStop,function(e){
+                let pos=(e.clientX-document.getElementById("colStops").offsetLeft)/700
+                if(pos<0)pos=0
+                if(pos>1)pos=1
+                selStop=moveColourStop(selStop,pos)
+
+                let updTime=performance.now()
+                if(updTime-lastUpdate>50){
+                    lastUpdate=updTime
+                    render()
+                }
+            },function(){
+
+            })
         }
         document.getElementById("colStops").append(dvel)
     }
@@ -103,33 +115,6 @@ function moveColourStop(index,position){
     updateGradient()
     return newIndex
 }
-
-let palDisp=document.getElementById("paletteDisplay")
-palDisp.addEventListener("dragover",e=>{
-    e.preventDefault()
-
-    let palStops=palette.stops
-    //if(e.screenX==e.clientX&&e.clientX==0)return
-    let offset=e.clientX-document.getElementById("colStops").offsetLeft
-    if(offset<0)offset=0
-    if(offset>700)offset=700
-
-    let newPos=offset/700
-    selStop=moveColourStop(selStop,newPos)
-
-    let updTime=performance.now()
-    if(updTime-lastUpdate>50){
-        lastUpdate=updTime
-        render()
-    }
-    //updateHandles()
-})
-
-palDisp.addEventListener("dragend",function(e){
-    e.preventDefault()
-    updateHandles()
-    render()
-},true)
 
 document.getElementById("stopOffset").addEventListener("input",function(e){
     if(selStop!=null&&selStop%(palette.stops.length-1)){
