@@ -33,7 +33,7 @@ function randomPalette(){
     palette.stops=stops
     dispPalette()
     //Mandelbrot.start()
-    render()
+    draw()
 }
 
 
@@ -84,7 +84,7 @@ function updateHandles(){
                 let updTime=performance.now()
                 if(updTime-lastUpdate>50){
                     lastUpdate=updTime
-                    render()
+                    draw()
                 }
             },function(){
 
@@ -121,16 +121,16 @@ document.getElementById("stopOffset").addEventListener("input",function(e){
         if(this.value>=0&&this.value<=1)selStop=moveColourStop(selStop,+this.value)
     }
     dispPalette()
-    render()
+    draw()
 })
 document.getElementById("stopColour").addEventListener("input",function(e){
     if(selStop!=null)palette.stops[selStop].colour=hexToRGB(this.value)
     dispPalette()
-    render()
+    draw()
 })
 document.getElementById("lengthInput").addEventListener("input",function(e){
     palette.length=+this.value
-    render()
+    draw()
 })
 
 

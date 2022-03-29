@@ -44,24 +44,37 @@ async function render(){
         for(var x=0;x<width;x++){
             colarr[y*width+x]=-16777216|getcol(row[x])
         }
-        //*
 
         nnow=performance.now()
         if(nnow>pnow+30){
-            //idata.data.set(resultsArray,0)
-
-            //idata.data.set(resultsArray.subarray(width*lrow*4,width*(y+1)*4),0)
-            //context.putImageData(idata,0,0)
-            context.putImageData(idata,0,lrow,0,0,width,y+1-lrow)
-            row=y+1
+            context.putImageData(idata,0,0,0,lrow,width,(y+1)-lrow)
+            lrow=(y+1)
 
             await new Promise(a=>setTimeout(a))
 
             pnow=nnow
         }
-        //*/
     }
 
+    //idata.data.set(resultsArray,0)
+    context.putImageData(idata,0,0)
+    //console.log("put img data")
+    //nnow=performance.now()
+    //console.log("render in "+1e-3*(nnow-start)+" s")
+}
+
+async function draw(){
+    var start,pnow,nnow
+    start=pnow=performance.now()
+    var colarr=new Uint32Array(idata.data.buffer)
+    var lrow=0
+    for(var y=0;y<height;y++){
+        var row=data[y]
+        for(var x=0;x<width;x++){
+            colarr[y*width+x]=-16777216|getcol(row[x])
+        }
+    }
+    console.log((performance.now()-start)+"ms")
     //idata.data.set(resultsArray,0)
     context.putImageData(idata,0,0)
     //console.log("put img data")
