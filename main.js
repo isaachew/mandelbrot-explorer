@@ -25,6 +25,7 @@ let palette={
 
 function getcol(x){
     if(x==-1)return 0
+    x+=palette.time*50||0
     let progress=x%palette.length/palette.length
     let palind=palette.stops.findIndex(a=>a.position>progress)
     let colprog=(progress-palette.stops[palind-1].position)/(palette.stops[palind].position-palette.stops[palind-1].position)
@@ -62,24 +63,18 @@ async function render(){
     //nnow=performance.now()
     //console.log("render in "+1e-3*(nnow-start)+" s")
 }
-
-async function draw(){
-    var start,pnow,nnow
-    start=pnow=performance.now()
+function draw(){
     var colarr=new Uint32Array(idata.data.buffer)
     var lrow=0
+    var index=0
     for(var y=0;y<height;y++){
-        var row=data[y]
         for(var x=0;x<width;x++){
-            colarr[y*width+x]=-16777216|getcol(row[x])
+            colarr[y*width+x]=-16777216|getcol(data[y][x])
         }
     }
-    console.log((performance.now()-start)+"ms")
+
     //idata.data.set(resultsArray,0)
     context.putImageData(idata,0,0)
-    //console.log("put img data")
-    //nnow=performance.now()
-    //console.log("render in "+1e-3*(nnow-start)+" s")
 }
 
 function initModule(){
@@ -91,7 +86,7 @@ function initModule(){
     //resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
     document.body.style.setProperty("--height",innerHeight+"px")
 
-    document.getElementById("mid").style.height=innerHeight-157-document.getElementById("render").offsetTop+"px"
+    document.getElementById("mid").style.height=innerHeight-157-document.getElementById("mid").offsetTop+"px"
     updateDims(width,height)
     Mandelbrot.updateCoords(cx,cy,scale)
     Mandelbrot.start()
@@ -99,7 +94,7 @@ function initModule(){
 }
 
 function updateCoords(ncx,ncy,ndepth){
-    Mandelbrot.updateCoords(cx=ncx,cy=ncy,depth=ndepth)
+    Mandelbrot.updateCoords(cx=ncx,cy=ncy,scale=ndepth)
     Mandelbrot.start()
     render()
 }
@@ -126,7 +121,7 @@ document.getElementById("render").addEventListener("pointerup",e=>{
     let offx=e.offsetX,offy=e.offsetY
     let cont=document.getElementById("canvcontainer")
     let isVertical=e.target.width*cont.offsetHeight-e.target.height*cont.offsetWidth>0
-    let asr
+    let asr=1
     if(isVertical){
         asr=e.target.width/cont.offsetWidth
     }else{
@@ -191,8 +186,6 @@ addDrag(xhandle,
 
     },
     function(a){
-        console.log("drag")
-        console.log(mid.offsetY,a.clientY)
         let yPos=a.pageY-3.5
         if(innerHeight-yPos-7<150){
             yPos=innerHeight-150-7
@@ -238,6 +231,14 @@ xhandle.addEventListener("mousemove",a=>{
 //xhandle.addEventListener("dragend",a=>{a.preventDefault()})
 
 
+function download(blob,filename){
+    var link=document.createElement('a')
+    var objUrl=URL.createObjectURL(blob)
+    link.href=objUrl
+    link.download=filename
+    link.click()
+    URL.revokeObjectURL(blob)
+}
 function saveImg(){
     document.getElementById('render').toBlob(a=>{
         var link=document.createElement('a')
@@ -247,6 +248,41 @@ function saveImg(){
         link.click()
     },'image/png')
 }
+var frags=[]
+async function record(){
+    var totLength=0
+    var enc=new VideoEncoder({
+        output(a,b){
+            frags.push(a)
+            let ab=new Uint8Array(b.description)
+            let x=ab.map(a=>a.toString(16).padStart(2,0)).join` `
+            totLength+=a.byteLength
+        },
+        error:console.log
+    })
+
+    Mandelbrot.start()
+    await render()
+    enc.configure({codec:"vp8",width:800,height:600})
+    for(var i=0;i<250;i++){
+        //Mandelbrot.updateCoords(0.35769030173765176128242160302761476,0.32581824336377923634344710990262683,0.7071**i)
+        draw()
+        palette.time=i/60
+        if(i%100==0)await new Promise(a=>setTimeout(a))
+        var vfr=new VideoFrame(document.getElementById("render"),{timestamp:i*200000,duration:200000})
+        enc.encode(vfr,{keyFrame:(i%100==0)})
+        vfr.close()
+    }
+
+    await enc.flush()
+    console.log("done encoding")
+    console.log("creating buffer")
+    blobData=generateEBML(frags)
 
 
+    enc.close()
+    var vidBlob=new Blob(blobData,{type:"video/webm"})
+    download(vidBlob,"render.webm")
+
+}
 initModule()

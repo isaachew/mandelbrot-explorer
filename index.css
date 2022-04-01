@@ -105,7 +105,7 @@ body{
 }
 
 #paletteEditor{
-    margin: 15px;
+    margin: 7px;
 }
 
 #curStop div{
@@ -118,15 +118,15 @@ body{
     text-align:right
 }
 input:hover{
-    border-color: red
+    border-color:#ccc
 }
 input{
-    transition: border-color .2s;
+    transition:border-color .2s;
     color:#555;
     background:#eee;
-    border-width: 0 0 1px;
-    border-style: solid;
-    border-color: #999;
+    border-width:0 0 1px;
+    border-style:solid;
+    border-color:#999;
 }
 
 @media(prefers-color-scheme:dark){

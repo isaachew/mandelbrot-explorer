@@ -1,9 +1,9 @@
 - Import/export coordinates
-- Render image
+x Render image
 - Change colour palette (function, colours)
-- Change max. iterations
+x Change max. iterations
 - Perturbation
 
 UI
-- No modals or blocking content
-- Palette editor opens in a separate pane
+x No modals or blocking content
+x Palette editor opens in a separate pane
