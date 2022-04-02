@@ -2,6 +2,7 @@ function encVarSize(len){
     var blen=len.toString(2).length
     var bibytes=[]
     var nunits=Math.ceil(blen/7)
+    if(len==127)nunits++//all bits 1 is interpreted as "unknown", so 127 cannot be encoded as a single byte
     for(var x=len,i=0;i<nunits;i++){
         bibytes.push(x&255)
         x>>=8;
