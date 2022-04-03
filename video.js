@@ -1,22 +1,34 @@
+var animStops=[0,0.4,1,5,1,0.9,1]
+
+var selStop2=0
+
+function addAnimStop(){
+    let inp=document.createElement("input")
+    inp.type="number"
+    inp.id="animStop"+animStops.length
+    let animNum=animStops.length
+    inp.addEventListener("input",e=>{
+        animStops[1]=1
+    })
+    document.getElementById("animStops").append(inp)
+
+}
+
 var vidChunks=[]
 async function record(){
     var startParam=+document.getElementById("startParam").value
     var endParam=+document.getElementById("endParam").value
     var duration=+document.getElementById("vidDuration").value
-    var totLength=0
     var enc=new VideoEncoder({
         output(a,b){
             vidChunks.push(a)
-            let ab=new Uint8Array(b.description)
-            let x=ab.map(a=>a.toString(16).padStart(2,0)).join` `
-            totLength+=a.byteLength
         },
         error:console.log
     })
 
     Mandelbrot.start()
     await render()
-    enc.configure({codec:"vp9",width:width,height:height,bitrate:20000000})
+    enc.configure({codec:"vp8",width:width,height:height,bitrate:20000000})
     for(var i=0;i<duration*30;i++){
         //Mandelbrot.updateCoords(0.35769030173765176128242160302761476,0.32581824336377923634344710990262683,0.7071**i)
         let totalProgress=i/(duration*30)
@@ -40,7 +52,7 @@ async function record(){
 
 
     enc.close()
-    var vidBlob=muxIntoBlob(vidChunks,{duration:duration*1000,encoding:"V_VP9",encodingName:"vp9 (webm, again)",width,height})
+    var vidBlob=muxIntoBlob(vidChunks,{duration:duration*1000,encoding:"V_VP8",encodingName:"vp9 (webm, again)",width,height})
     download(vidBlob,"video.webm")
 
 }
