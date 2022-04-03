@@ -33,13 +33,13 @@ function encIntegerFixed(integer,nBytes){
     }
     return new Uint8Array(bytes.reverse())
 }
-function createBlock(data,timestamp){
+function createBlock(data,timestamp,keyframe=0){
     var nodes=[]
 
     var trackNumber=encVarSize(1)
     nodes.push(trackNumber)
     nodes.push(encIntegerFixed(timestamp,2))
-    nodes.push(encIntegerFixed(0,1))//no lacing
+    nodes.push(encIntegerFixed(keyframe<<7,1))//no lacing, may be keyframe
     var dataBuffer=new Uint8Array(data.byteLength)
     data.copyTo(dataBuffer)
     nodes.push(dataBuffer)
@@ -52,19 +52,26 @@ function createBlock(data,timestamp){
     }
     return dv
 }
-function generateEBML(frags){
+function generateEBML(frames,{width:videoWidth,height:videoHeight,duration:vidDuration,encoding="V_VP8",encodingName="VP8 (webm)"}){
+    if(videoWidth==null)videoWidth=frames[0].width
+    if(videoHeight==null)videoWidth=frames[0].height
+
     var clusters=[]
-    var cluster=null
+    var curCluster=null
     var clusterTimestamp=null
-    var numBlocks=0
     var cuePoints=[]
+
+    //used for cues
     var lastKeyTime=0
-    for(var i=0;i<frags.length;i++){
-        let timestamp=Math.floor(1000/60*i)
-        if(cluster==null||timestamp>30000+clusterTimestamp){//create cluster
+    var numBlocks=0
+
+    for(var i=0;i<frames.length;i++){
+        let curFrame=frames[i]
+        let timestamp=Math.floor(curFrame.timestamp/1000)//timestamp is in microseconds
+        if(curCluster==null||timestamp>30000+clusterTimestamp){//create curCluster
             clusterTimestamp=timestamp
-            if(cluster!=null)clusters.push(cluster)
-            cluster={
+            if(curCluster!=null)clusters.push(curCluster)
+            curCluster={
                 id:0x1F43B675,//Cluster
                 content:[
                     {
@@ -75,32 +82,19 @@ function generateEBML(frags){
             }
             numBlocks=0
         }
-        let bGroup={
-            id:0xA0,//BlockGroup
-            content:[
-                {
-                    id:0xA1,//Block
-                    content:createBlock(frags[i],timestamp-clusterTimestamp)
-                }
-            ]
+        let block={
+            id:0xA3,//SimpleBlock
+            content:createBlock(curFrame,timestamp-clusterTimestamp,frames[i].type=="key")
         }
-        cluster.content.push(bGroup)
-        if(frags[i].type=="key"){
+        if(frames[i].type=="key"){
             lastKeyTime=timestamp
-            bGroup.content.push({
-                id:0xFA,//ReferencePriority
-                content:1
-            })
             cuePoints.push({clusterNum:clusters.length,blockNum:numBlocks,time:timestamp})
-        }else{
-            bGroup.content.push({
-                id:0xFB,//ReferenceBlock
-                content:lastKeyTime-timestamp
-            })
         }
+
+        curCluster.content.push(block)
         numBlocks++
     }
-    if(cluster!=null)clusters.push(cluster)
+    if(curCluster!=null)clusters.push(curCluster)
     var tracksEl={
         id:0x1654AE6B,//Tracks
         content:[
@@ -125,22 +119,22 @@ function generateEBML(frags){
                     },
                     {
                         id:0x86,//CodecID
-                        content:"V_VP8"
+                        content:encoding
                     },
                     {
                         id:0x258688,//CodecName
-                        content:"VP8 (webm)"
+                        content:encodingName
                     },
                     {
                         id:0xE0,//Video
                         content:[
                             {
                                 id:0xB0,//PixelWidth
-                                content:800
+                                content:videoWidth
                             },
                             {
                                 id:0xBA,//PixelHeight
-                                content:600
+                                content:videoHeight
                             }
                         ]
                     }
@@ -160,7 +154,7 @@ function generateEBML(frags){
                         content:1000000//milliseconds
                     },{
                         id:0x4489,//Duration
-                        content:16666,
+                        content:vidDuration,
                         float:true
                     },{
                         id:0x4D80,//MuxingApp
@@ -253,9 +247,7 @@ function generateEBML(frags){
         segment
     ]
 
-    console.log(rootEl)
-    var encoded=rootEl.flatMap(ebmlToBuffers)
-    return encoded
+    return rootEl
 }
 /*
 Encodes an EBML element into an array of buffers.
@@ -298,4 +290,11 @@ function ebmlToBuffers(elem){
     bufferData.byteLength=dataLength+ebmlId.byteLength+elemLength.byteLength
     return bufferData
 
+}
+/*
+Generates a Blob (webm file) from a set of frames.
+*/
+function muxIntoBlob(frames,options){
+    var ebml=generateEBML(frames,options)
+    return new Blob(ebml.flatMap(ebmlToBuffers),{type:"video/webm"})
 }
