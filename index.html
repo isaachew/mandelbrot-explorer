@@ -12,8 +12,9 @@
         <script src="mandelbrot/workers/mandelbrot.js"></script>
         <script src="dragdrop.js"></script>
         <script src="main.js" defer></script>
-        <script src="webm.js" async></script>
         <script src="palette.js" defer></script>
+        <script src="webm.js" async></script>
+        <script src="video.js" async></script>
         <link rel="stylesheet" href="index.css">
         <title>Mandelbrot Explorer</title>
     </head>
@@ -29,8 +30,8 @@
                 <div style="width:7px;background:#555"></div>
                 <div id="sidebar">
                     <button onclick="saveImg()">Download</button>
-
-                    <button onclick="record()">Record</button>
+                    <button onclick="showDiv('paletteEditor')">1</button>
+                    <button onclick="showDiv('video')">2</button>
 
                     <div><div class="inpLabel">Iters:</div><input style="width:70px" type="number" oninput="Mandelbrot.updateWorkers({iters:+this.value|0})"></div>
                     <div><div class="inpLabel">Width:</div><input style="width:70px" type="number" max="10000" onchange="updateDims(+this.value,Mandelbrot.height)"></div>
@@ -60,6 +61,11 @@
 
                         Palette Length: <input type="number" id="lengthInput">
                     </div>
+                </div>
+                <div id="video">
+                    <input type="number" id="vidDuration">
+                    
+                    <button onclick="record()">Apply</button>
                 </div>
             </div>
         </div>

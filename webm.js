@@ -176,12 +176,13 @@ function generateEBML(frames,{width:videoWidth,height:videoHeight,duration:vidDu
                                 content:0x1C53BB6B//Cues
                             },{
                                 id:0x53AC,//SeekPosition
-                                content:2
+                                content:3
                             }
                         ]
                     }
                 ]
             },
+            tracksEl,
             {
                 id:0x1C53BB6B,//Cues
                 content:cuePoints.map(({clusterNum,blockNum,time})=>{
@@ -212,7 +213,6 @@ function generateEBML(frames,{width:videoWidth,height:videoHeight,duration:vidDu
                     }
                 })
             },
-            tracksEl,
             ...clusters
         ]
     }

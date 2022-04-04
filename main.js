@@ -25,7 +25,7 @@ let palette={
 
 function getcol(x){
     if(x==-1)return 0
-    x+=palette.time*50||0
+    x+=palette.time||0
     let progress=x%palette.length/palette.length
     let palind=palette.stops.findIndex(a=>a.position>progress)
     let colprog=(progress-palette.stops[palind-1].position)/(palette.stops[palind].position-palette.stops[palind-1].position)
@@ -248,41 +248,13 @@ function saveImg(){
         link.click()
     },'image/png')
 }
-var frags=[]
-async function record(){
-    var totLength=0
-    var enc=new VideoEncoder({
-        output(a,b){
-            frags.push(a)
-            let ab=new Uint8Array(b.description)
-            let x=ab.map(a=>a.toString(16).padStart(2,0)).join` `
-            totLength+=a.byteLength
-        },
-        error:console.log
-    })
 
-    Mandelbrot.start()
-    await render()
-    enc.configure({codec:"vp8",width:800,height:600})
-    for(var i=0;i<250;i++){
-        //Mandelbrot.updateCoords(0.35769030173765176128242160302761476,0.32581824336377923634344710990262683,0.7071**i)
-        draw()
-        palette.time=i/60
-        if(i%100==0)await new Promise(a=>setTimeout(a))
-        var vfr=new VideoFrame(document.getElementById("render"),{timestamp:i*200000,duration:200000})
-        enc.encode(vfr,{keyFrame:(i%100==0)})
-        vfr.close()
-    }
+function showDiv(elem) {
+    [...document.getElementsByClassName("visible")].map(el=>{
+        el.classList.remove("visible")
+    });
 
-    await enc.flush()
-    console.log("done encoding")
-    console.log("creating buffer")
-    blobData=generateEBML(frags)
-
-
-    enc.close()
-    var vidBlob=new Blob(blobData,{type:"video/webm"})
-    download(vidBlob,"render.webm")
-
+    document.getElementById(elem).classList.add("visible")
 }
+
 initModule()
