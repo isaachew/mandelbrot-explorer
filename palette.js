@@ -11,18 +11,10 @@ function rgbToHex(st){
     return "#"+toHex(st[0])+toHex(st[1])+toHex(st[2])
 }
 
-let requested=false
-function reqRender(){
-    if(!requested){
-        requested=true
-
-    }
-}
-
 function randomPalette(){
-    let ncols=1
-    for(;Math.random()<.5;ncols++);
-    ncols=5
+    //let ncols=1
+    //for(;Math.random()<.5;ncols++);
+    let ncols=10
     var randcol=()=>[255*Math.random(),255*Math.random(),255*Math.random()]
     let endpoints=randcol()
     let stops=[{position:0,colour:endpoints},{position:1,colour:endpoints}]

@@ -147,3 +147,20 @@ input{
 #bottom .visible{
     display:block
 }
+
+#vidTimeline{
+    width:700px;
+    margin-left:30px
+}
+#animStops{
+    width:700px;
+    height:30px;
+    position:relative
+}
+.animStop{
+    width:20px;
+    height:20px;
+    background:red;
+    position:absolute;
+    transform:translateX(-10px);
+}

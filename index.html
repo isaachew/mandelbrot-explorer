@@ -44,7 +44,6 @@
             <div id="xhandle">&nbsp;</div>
             <div id="bottom">
                 <div id="paletteEditor">
-                    <button onclick="randomPalette()">Random palette</button>
                     <div style="width:750px;padding-left:15px">
                         <div id="paletteDisplay">
                             <canvas id="paletteGradient" width="700" height="30"></canvas>
@@ -59,12 +58,29 @@
                             </div>
                         </div>
 
-                        Palette Length: <input type="number" id="lengthInput">
+                        <button onclick="randomPalette()">Random palette</button>
+                        
+                        <div style="margin-top:20px">Palette Length: <input type="number" id="lengthInput"></div>
                     </div>
                 </div>
                 <div id="video">
-                    <input type="number" id="vidDuration">
-                    
+                    <div id="vidTimeline">
+                        <canvas id="animVisual" width="1400" height="200" style="width:700px"></canvas>
+                        <div id="animStops"></div>
+                    </div>
+                    <div><div>Parameter: <input type="number" id="stopParam"></div>
+                    <button type="number" id="addStop">Add stop</button>
+
+
+                    <div><div>
+                        Video duration:
+                        <input type="number" id="vidDuration">
+                    </div>
+                    <div>
+                        FPS:
+                        <input type="number" id="vidFPS" value="30" min="1" max="120">
+                    </div>
+
                     <button onclick="record()">Apply</button>
                 </div>
             </div>
