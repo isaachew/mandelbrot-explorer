@@ -1,11 +1,16 @@
-var animStops=[0]
+var animStops=[{position:0,param:0},{position:1,param:0}]
+animStops.pushAndSort=a=>{
+    var pos=a.position
+    var ind=animStops.findIndex(a=>a.position>pos)
+    animStops.splice(ind,0,a)
+}
 
 var selStop2=0
 
 var animVis=document.getElementById("animVisual")
 var visWidth=+animVis.width
 var visHeight=+animVis.height
-var animContext=animVis.getContext("2d")
+var animCtx=animVis.getContext("2d")
 
 function addAnimStop(){
     let inp=document.createElement("div")
@@ -14,7 +19,7 @@ function addAnimStop(){
     let animNum=animStops.length
 
     inp.style.left=700*(1-1/(animNum+1))+"px"
-    animStops.push(0)
+    animStops.pushAndSort({position:Math.random(),param:Math.random()*90})
     inp.addEventListener("click",e=>{
         selStop2=animNum
     })
@@ -22,30 +27,31 @@ function addAnimStop(){
 }
 
 function updateStuff(){
-    animContext.clearRect(0,0,visWidth,visHeight)
-    animContext.strokeStyle="#ccc"
-    animContext.fillStyle="#ccc"
-    animContext.lineWidth=2
-    animContext.beginPath()
-    animContext.moveTo(0,visHeight-animStops[0])
+    animCtx.clearRect(0,0,visWidth,visHeight)
+    animCtx.strokeStyle="#ccc"
+    animCtx.fillStyle="#ccc"
+    animCtx.lineWidth=2
+    animCtx.beginPath()
+    animCtx.moveTo(0,visHeight-animStops[0].param)
     for(var i=1;i<animStops.length;i++){
-        animContext.lineTo(visWidth*i/(animStops.length-1),visHeight-animStops[i])
+        animCtx.lineTo(visWidth*animStops[i].position,visHeight-animStops[i].param)
 
     }
-    animContext.stroke()
+    animCtx.stroke()
     for(var i=0;i<animStops.length;i++){
-        animContext.beginPath()
-        animContext.arc(visWidth*i/(animStops.length-1),visHeight-animStops[i],5,0,Math.PI*2,0)
-        animContext.fill()
+        animCtx.beginPath()
+        animCtx.arc(visWidth*animStops[i].position,visHeight-animStops[i].param,5,0,Math.PI*2,0)
+        animCtx.fill()
     }
-
+    /*
     for(var i=0;i<animStops.length;i++){
         var stopElem=document.getElementById("animStop"+i)
-        if(stopElem)stopElem.style.left=i*700/(animStops.length-1)+"px"
+        if(stopElem)stopElem.style.left=animStops[i].position*700+"px"
         else{
 
         }
     }
+    */
 }
 
 document.getElementById("addStop").addEventListener("click",a=>{
@@ -53,7 +59,7 @@ document.getElementById("addStop").addEventListener("click",a=>{
     updateStuff()
 })
 document.getElementById("stopParam").addEventListener("input",a=>{
-    animStops[selStop2]=+a.target.value
+    animStops[selStop2].param=+a.target.value
     updateStuff()
 })
 
@@ -77,15 +83,14 @@ async function record(){
     for(var i=0;i<duration*vidFPS;i++){
         //Mandelbrot.updateCoords(0.35769030173765176128242160302761476,0.32581824336377923634344710990262683,0.7071**i)
         let totalProgress=i/(duration*vidFPS)
-        let lerpProgress=totalProgress*(animStops.length-1)
-        let lerpIndex=lerpProgress|0
-        lerpProgress%=1
-        let lerpResult=animStops[lerpIndex]*(1-lerpProgress)+animStops[lerpIndex+1]*lerpProgress
-        palette.time=lerpResult
-        //Mandelbrot.updateWorkers({param:lerpResult})
-        //Mandelbrot.start()
-        //await render()
-        draw()
+        let lerpIndex=animStops.findIndex(a=>a.position>totalProgress)
+        let lerpProgress=(totalProgress-animStops[lerpIndex-1].position)/(animStops[lerpIndex].position-animStops[lerpIndex-1].position)
+        let lerpResult=animStops[lerpIndex-1].param*(1-lerpProgress)+animStops[lerpIndex].param*lerpProgress
+        //palette.time=lerpResult
+        Mandelbrot.updateWorkers({param:lerpResult/100-1})
+        Mandelbrot.start()
+        await render()
+        //draw()
         context.fillStyle="black"
         context.font="40px Verdana"
         context.fillText("P: "+lerpResult.toFixed(3),0,40)

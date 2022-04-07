@@ -14,7 +14,7 @@ function rgbToHex(st){
 function randomPalette(){
     //let ncols=1
     //for(;Math.random()<.5;ncols++);
-    let ncols=10
+    let ncols=5
     var randcol=()=>[255*Math.random(),255*Math.random(),255*Math.random()]
     let endpoints=randcol()
     let stops=[{position:0,colour:endpoints},{position:1,colour:endpoints}]
@@ -27,7 +27,6 @@ function randomPalette(){
     //Mandelbrot.start()
     draw()
 }
-
 
 let selStop=null
 function updateGradient(){

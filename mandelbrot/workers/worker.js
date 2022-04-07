@@ -1,5 +1,5 @@
 var notify=()=>{}
-var dims={cx:0,cy:0,depth:1,width:800,height:600,iters:1000}
+var dims={cx:0,cy:0,depth:1,width:800,height:600,iters:1000,param:0}
 var curval=null
 onmessage=function(mess){
     //console.log(mess)
@@ -20,7 +20,7 @@ function getcoords(x,y){
 }
 
 function numits(cx,cy){
-    var zx=0,zy=0
+    var zx=dims.param,zy=0
     for(var j=0;j<dims.iters;j++){
         var zxs=zx*zx,zys=zy*zy
         if(zxs+zys>4)return j
@@ -29,6 +29,22 @@ function numits(cx,cy){
     }
     return -1
 }
+
+/*
+function numits(zx,zy){
+    zy=-zy
+    var ang=dims.param*Math.PI/180
+    for(var j=0;j<dims.iters;j++){
+        var zxs=zx*zx,zys=zy*zy
+        if(zxs+zys>16)return j
+        zx=Math.abs(zx);
+        [zx,zy]=[2*(zx-1)*Math.cos(ang/2)**2-zy*Math.sin(ang)+1,(zx-1)*Math.sin(ang)+2*zy*Math.cos(ang/2)**2]
+        zy=-zy
+    }
+    return -1
+}
+*/
+
 
 (async()=>{
     while(1){

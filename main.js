@@ -249,7 +249,7 @@ function saveImg(){
     },'image/png')
 }
 
-function showDiv(elem) {
+function showDiv(elem){
     [...document.getElementsByClassName("visible")].map(el=>{
         el.classList.remove("visible")
     });

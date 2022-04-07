@@ -32,13 +32,14 @@
                     <button onclick="saveImg()">Download</button>
                     <button onclick="showDiv('paletteEditor')">1</button>
                     <button onclick="showDiv('video')">2</button>
-
-                    <div><div class="inpLabel">Iters:</div><input style="width:70px" type="number" oninput="Mandelbrot.updateWorkers({iters:+this.value|0})"></div>
-                    <div><div class="inpLabel">Width:</div><input style="width:70px" type="number" max="10000" onchange="updateDims(+this.value,Mandelbrot.height)"></div>
-                    <div><div class="inpLabel">Height:</div><input style="width:70px" type="number" max="10000" onchange="updateDims(Mandelbrot.width,+this.value)"></div>
-                    <div><div class="inpLabel">Real:</div><input style="width:70px" type="number" max="10000" onchange="updateCoords(+this.value,Mandelbrot.cy,Mandelbrot.depth)"></div>
-                    <div><div class="inpLabel">Imag:</div><input style="width:70px" type="number" max="10000" onchange="updateCoords(Mandelbrot.cx,+this.value,Mandelbrot.depth)"></div>
-                    <div><div class="inpLabel">Depth:</div><input style="width:70px" type="number" max="10000" onchange="updateCoords(Mandelbrot.cx,Mandelbrot.cy,+this.value)"></div>
+                    <div class="menu">
+                        <div><label class="inputItem"><span>Iters:</span><input style="width:70px" type="number" oninput="Mandelbrot.updateWorkers({iters:+this.value|0})"></label></div>
+                        <div><label class="inputItem"><span>Width:</span><input style="width:70px" type="number" max="10000" onchange="updateDims(+this.value,Mandelbrot.height)"></label></div>
+                        <div><label class="inputItem"><span>Height:</span><input style="width:70px" type="number" max="10000" onchange="updateDims(Mandelbrot.width,+this.value)"></label></div>
+                        <div><label class="inputItem"><span>Real:</span><input style="width:70px" type="number" max="10000" onchange="updateCoords(+this.value,Mandelbrot.cy,Mandelbrot.depth)"></label></div>
+                        <div><label class="inputItem"><span>Imag:</span><input style="width:70px" type="number" max="10000" onchange="updateCoords(Mandelbrot.cx,+this.value,Mandelbrot.depth)"></label></div>
+                        <div><label class="inputItem"><span>Depth:</span><input style="width:70px" type="number" max="10000" onchange="updateCoords(Mandelbrot.cx,Mandelbrot.cy,+this.value)"></label></div>
+                    </div>
                 </div>
             </div>
             <div id="xhandle">&nbsp;</div>
@@ -59,7 +60,7 @@
                         </div>
 
                         <button onclick="randomPalette()">Random palette</button>
-                        
+
                         <div style="margin-top:20px">Palette Length: <input type="number" id="lengthInput"></div>
                     </div>
                 </div>
@@ -68,11 +69,12 @@
                         <canvas id="animVisual" width="1400" height="200" style="width:700px"></canvas>
                         <div id="animStops"></div>
                     </div>
-                    <div><div>Parameter: <input type="number" id="stopParam"></div>
-                    <button type="number" id="addStop">Add stop</button>
+                    <div>
+                        <div>Parameter: <input type="number" id="stopParam"></div>
+                        <button type="number" id="addStop">Add stop</button>
+                    </div>
 
-
-                    <div><div>
+                    <div style="margin-top:30px"><div>
                         Video duration:
                         <input type="number" id="vidDuration">
                     </div>
