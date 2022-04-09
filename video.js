@@ -1,9 +1,4 @@
-var animStops=[{position:0,param:0},{position:1,param:0}]
-animStops.pushAndSort=a=>{
-    var pos=a.position
-    var ind=animStops.findIndex(a=>a.position>pos)
-    animStops.splice(ind,0,a)
-}
+var animStops=[{position:0,param:100},{position:1,param:100}]
 
 var selStop2=0
 
@@ -12,18 +7,11 @@ var visWidth=+animVis.width
 var visHeight=+animVis.height
 var animCtx=animVis.getContext("2d")
 
-function addAnimStop(){
-    let inp=document.createElement("div")
-    inp.classList.add("animStop")
-    inp.id="animStop"+animStops.length
+function addAnimStop(pos){
     let animNum=animStops.length
-
-    inp.style.left=700*(1-1/(animNum+1))+"px"
-    animStops.pushAndSort({position:Math.random(),param:Math.random()*90})
-    inp.addEventListener("click",e=>{
-        selStop2=animNum
-    })
-    document.getElementById("animStops").append(inp)
+    //inp.style.left=700*(1-0.95**(animNum+1))+"px"
+    SortedArray.pushAndSort(animStops,{position:pos,param:100})
+    updateHandles2()
 }
 
 function updateStuff(){
@@ -43,19 +31,35 @@ function updateStuff(){
         animCtx.arc(visWidth*animStops[i].position,visHeight-animStops[i].param,5,0,Math.PI*2,0)
         animCtx.fill()
     }
-    /*
-    for(var i=0;i<animStops.length;i++){
-        var stopElem=document.getElementById("animStop"+i)
-        if(stopElem)stopElem.style.left=animStops[i].position*700+"px"
-        else{
+}
+function updateHandles2(){
+    document.getElementById("animStops").innerHTML=""
+    for(let i=0;i<animStops.length;i++){
+        let inp=document.createElement("div")
+        inp.classList.add("animStop")
+        inp.id="animStop"+animStops.length
 
-        }
+        inp.style.left=animStops[i].position*700+"px"
+        addDrag(inp,a=>{
+            selStop2=i
+        },e=>{
+            let offset=document.getElementById("animStops").offsetLeft
+            var newInd=SortedArray.updatePosition(animStops,selStop2,(e.clientX-offset)/700)
+            selStop2=newInd
+            updateHandles2()
+            updateStuff()
+        },a=>{})
+        document.getElementById("animStops").append(inp)
     }
-    */
 }
 
+document.getElementById("animVisual").addEventListener("click",a=>{
+    addAnimStop(0.5)
+    updateStuff()
+})
+
 document.getElementById("addStop").addEventListener("click",a=>{
-    addAnimStop()
+    addAnimStop(0.5)
     updateStuff()
 })
 document.getElementById("stopParam").addEventListener("input",a=>{
@@ -81,16 +85,13 @@ async function record(){
     await render()
     enc.configure({codec:"vp8",width:width,height:height,bitrate:20000000})
     for(var i=0;i<duration*vidFPS;i++){
-        //Mandelbrot.updateCoords(0.35769030173765176128242160302761476,0.32581824336377923634344710990262683,0.7071**i)
         let totalProgress=i/(duration*vidFPS)
         let lerpIndex=animStops.findIndex(a=>a.position>totalProgress)
         let lerpProgress=(totalProgress-animStops[lerpIndex-1].position)/(animStops[lerpIndex].position-animStops[lerpIndex-1].position)
         let lerpResult=animStops[lerpIndex-1].param*(1-lerpProgress)+animStops[lerpIndex].param*lerpProgress
-        //palette.time=lerpResult
         Mandelbrot.updateWorkers({param:lerpResult/100-1})
         Mandelbrot.start()
         await render()
-        //draw()
         context.fillStyle="black"
         context.font="40px Verdana"
         context.fillText("P: "+lerpResult.toFixed(3),0,40)
@@ -109,3 +110,6 @@ async function record(){
     download(vidBlob,"video.webm")
 
 }
+
+updateStuff()
+updateHandles2()

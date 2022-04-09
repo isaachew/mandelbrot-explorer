@@ -117,6 +117,9 @@ body{
     display:inline-block;
     text-align:right
 }
+.inputItem input{
+    width:70px
+}
 input:hover{
     border-color:#ccc
 }
@@ -163,4 +166,5 @@ input{
     background:red;
     position:absolute;
     transform:translateX(-10px);
+    border:1px solid #ccc;
 }

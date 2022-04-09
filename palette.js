@@ -57,7 +57,6 @@ function updateHandles(){
         let csscol="#"+colStop.colour.map(a=>(a|0).toString(16).padStart(2,0)).join``
         dvel.style.backgroundColor=csscol
         dvel.style.left=colStop.position*700+"px"
-        dvel.textContent="\u00a0"
 
         function selectStop(){
             selStop=curIndex
@@ -91,16 +90,8 @@ function moveColourStop(index,position){
     document.getElementById("paletteStop"+selStop).style.left=position*700+"px"
 
 
-    let newIndex=palStops.findIndex((a,b)=>b>index?a.position>=position:a.position>position)
-    if(newIndex>index)newIndex--
-
-    palStops[index].position=position
-
-    if(palStops[index].position<palStops[index-1].position
-        ||
-    palStops[index].position>palStops[index+1].position){
-        let oldEl=palStops.splice(index,1)[0]
-        palStops.splice(newIndex,0,oldEl)
+    let newIndex=SortedArray.updatePosition(palStops,index,position)
+    if(newIndex!=index){
         updateHandles()
     }
     updateGradient()

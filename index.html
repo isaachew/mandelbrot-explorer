@@ -11,10 +11,11 @@
         </script>
         <script src="mandelbrot/workers/mandelbrot.js"></script>
         <script src="dragdrop.js"></script>
+        <script src="webm.js"></script>
+        <script src="sortedarray.js"></script>
         <script src="main.js" defer></script>
         <script src="palette.js" defer></script>
-        <script src="webm.js" async></script>
-        <script src="video.js" async></script>
+        <script src="video.js" defer></script>
         <link rel="stylesheet" href="index.css">
         <title>Mandelbrot Explorer</title>
     </head>
@@ -33,12 +34,12 @@
                     <button onclick="showDiv('paletteEditor')">1</button>
                     <button onclick="showDiv('video')">2</button>
                     <div class="menu">
-                        <div><label class="inputItem"><span>Iters:</span><input style="width:70px" type="number" oninput="Mandelbrot.updateWorkers({iters:+this.value|0})"></label></div>
-                        <div><label class="inputItem"><span>Width:</span><input style="width:70px" type="number" max="10000" onchange="updateDims(+this.value,Mandelbrot.height)"></label></div>
-                        <div><label class="inputItem"><span>Height:</span><input style="width:70px" type="number" max="10000" onchange="updateDims(Mandelbrot.width,+this.value)"></label></div>
-                        <div><label class="inputItem"><span>Real:</span><input style="width:70px" type="number" max="10000" onchange="updateCoords(+this.value,Mandelbrot.cy,Mandelbrot.depth)"></label></div>
-                        <div><label class="inputItem"><span>Imag:</span><input style="width:70px" type="number" max="10000" onchange="updateCoords(Mandelbrot.cx,+this.value,Mandelbrot.depth)"></label></div>
-                        <div><label class="inputItem"><span>Depth:</span><input style="width:70px" type="number" max="10000" onchange="updateCoords(Mandelbrot.cx,Mandelbrot.cy,+this.value)"></label></div>
+                        <div><label class="inputItem"><span>Iters:</span><input type="number" oninput="Mandelbrot.updateWorkers({iters:+this.value|0})"></label></div>
+                        <div><label class="inputItem"><span>Width:</span><input type="number" max="10000" onchange="updateDims(+this.value,Mandelbrot.height)"></label></div>
+                        <div><label class="inputItem"><span>Height:</span><input type="number" max="10000" onchange="updateDims(Mandelbrot.width,+this.value)"></label></div>
+                        <div><label class="inputItem"><span>Real:</span><input type="number" max="10000" onchange="updateCoords(+this.value,Mandelbrot.cy,Mandelbrot.depth)"></label></div>
+                        <div><label class="inputItem"><span>Imag:</span><input type="number" max="10000" onchange="updateCoords(Mandelbrot.cx,+this.value,Mandelbrot.depth)"></label></div>
+                        <div><label class="inputItem"><span>Depth:</span><input type="number" max="10000" onchange="updateCoords(Mandelbrot.cx,Mandelbrot.cy,+this.value)"></label></div>
                     </div>
                 </div>
             </div>
