@@ -3,7 +3,7 @@ let context=canvas.getContext("2d")
 
 let width=canvas.width,height=canvas.height
 let scale=4
-let cx=-1,cy=0
+let cx=0,cy=0
 let paletteId=0
 let idata=context.createImageData(width,height)
 
