@@ -113,11 +113,13 @@ async function record(){
     Mandelbrot.start()
     await render()
     enc.configure({codec:"vp8",width:width,height:height,bitrate:40000000})
+    let targetDepth=Mandelbrot.depth
+
     let keyframe=null
     let keyframeDepth=44444
     for(var i=0;i<duration*vidFPS;i++){
-        let newDepth=0.95**i
         let totalProgress=i/(duration*vidFPS)
+        let newDepth=4*(targetDepth/4)**totalProgress
         var params={}
         for(let i of animProps){
             params[i]=lerpArray(animation[i],totalProgress)
