@@ -1,10 +1,13 @@
 let canvas=document.getElementById("render")
 let context=canvas.getContext("2d")
 
+let params={x:0.25,y:0}
+
 let width=canvas.width,height=canvas.height
 let scale=4
 let cx=0,cy=0
 let paletteId=0
+let scaleFactor=1;
 let idata=context.createImageData(width,height)
 
 
@@ -41,11 +44,11 @@ async function render(){
     var colarr=new Uint32Array(idata.data.buffer)
     var lrow=0
     for(var y=0;y<height;y++){
-        var row=await Mandelbrot.calcRow(y,1)
+        var row=(data[y]||(await Mandelbrot.calcRow(y)))
         for(var x=0;x<width;x++){
             colarr[y*width+x]=-16777216|getcol(row[x])
         }
-
+        /*
         nnow=performance.now()
         if(nnow>pnow+30){
             context.putImageData(idata,0,0,0,lrow,width,(y+1)-lrow)
@@ -55,6 +58,7 @@ async function render(){
 
             pnow=nnow
         }
+        */
     }
 
     //idata.data.set(resultsArray,0)
@@ -121,13 +125,13 @@ document.getElementById("render").addEventListener("pointerup",e=>{
     let offx=e.offsetX,offy=e.offsetY
     let cont=document.getElementById("canvcontainer")
     let isVertical=e.target.width*cont.offsetHeight-e.target.height*cont.offsetWidth>0
-    let asr=1
+    //let asr=1
     if(isVertical){
-        asr=e.target.width/cont.offsetWidth
+        scaleFactor=e.target.width/cont.offsetWidth
     }else{
-        asr=e.target.height/cont.offsetHeight
+        scaleFactor=e.target.height/cont.offsetHeight
     }
-    offx*=asr,offy*=asr
+    offx*=scaleFactor,offy*=scaleFactor
 
     var coords=Mandelbrot.getCoords(offx,offy);
     [cx,cy]=coords
@@ -143,13 +147,20 @@ document.getElementById("render").addEventListener("pointerup",e=>{
     Mandelbrot.start()
     render()
 })
-document.getElementById("render").addEventListener("keydown",e=>{
-    var coords=Mandelbrot.getCoords(width/2,height/2)
-    scale*=.01
-    Mandelbrot.updateCoords(...coords,scale)
-    Mandelbrot.start()
-    render()
-    e.preventDefault()
+// HACK: add ready variable so renders aren't interrupted
+ready=true
+document.getElementById("render").addEventListener("mousemove",e=>{
+    if(!e.shiftKey)return
+    let coords=Mandelbrot.getCoords(e.offsetX*scaleFactor,e.offsetY*scaleFactor)
+    params.x=animation.x[0].param=coords[0]
+    params.y=animation.y[0].param=coords[1]
+    updateView()
+    Mandelbrot.updateWorkers({params})
+    if(ready){
+        Mandelbrot.start()
+        ready=false
+        render().then(a=>{ready=true})
+    }
 })
 //if(initialised)
 //else Module.onRuntimeInitialized=initModule
@@ -255,6 +266,35 @@ function showDiv(elem){
     });
 
     document.getElementById(elem).classList.add("visible")
+}
+
+for(let i in params){
+    let inp=document.createElement("input")
+    inp.id="paramInp_"+i
+    inp.type="number"
+    inp.step="0.01"
+    let label=document.createElement("label")
+
+    label.classList.add("inputItem")
+    let spanEl=document.createElement("span")
+    spanEl.append(i)
+    let dataLabel=document.createElement("span")
+    dataLabel.textContent=params[i]
+    inp.addEventListener("input",a=>{
+        params[i]=+a.target.value
+        dataLabel.textContent=params[i]
+    })
+    inp.addEventListener("change",a=>{
+
+        Mandelbrot.updateWorkers({params})
+        Mandelbrot.start()
+        render()
+    })
+
+    label.append(spanEl,inp,dataLabel)
+    let divEl=document.createElement("div")
+    divEl.append(label)
+    document.getElementById("params").append(divEl)
 }
 
 initModule()

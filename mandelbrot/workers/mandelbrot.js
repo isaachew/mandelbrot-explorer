@@ -5,6 +5,7 @@ Mandelbrot.numits=0
 Mandelbrot.depth=1
 Mandelbrot.width=800
 Mandelbrot.height=600
+Mandelbrot.ready=true//a hack so renders aren't interrupted
 
 
 var data=[]
@@ -23,6 +24,8 @@ for(var i=0;i<numWorkers;i++){
         data[e.data.row]=e.data.data
         if(complete<Mandelbrot.height){
             e.target.postMessage({type:1,row:complete++})
+        }else{
+            Mandelbrot.ready=true
         }
     }
 }
@@ -58,6 +61,7 @@ Mandelbrot.start=a=>{
     for(var i=0;i<numWorkers;i++){
         workers[i].postMessage({type:1,row:complete++})
     }
+    Mandelbrot.ready=false
     complete=0
     proms=[]
     data=[]

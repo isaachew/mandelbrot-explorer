@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="utf-8">
         <script>
             var initialised=false
             var Mandelbrot={
@@ -31,8 +32,9 @@
                 <div style="width:7px;background:#555"></div>
                 <div id="sidebar">
                     <button onclick="saveImg()">Download</button>
-                    <button onclick="showDiv('paletteEditor')">1</button>
-                    <button onclick="showDiv('video')">2</button>
+                    <button onclick="showDiv('paletteEditor')">Palette Editor</button>
+                    <button onclick="showDiv('video')">Video</button>
+                    <button onclick="showDiv('settings')">Settings</button>
                     <div class="menu">
                         <div><label class="inputItem"><span>Iters:</span><input type="number" oninput="Mandelbrot.updateWorkers({iters:+this.value|0})"></label></div>
                         <div><label class="inputItem"><span>Width:</span><input type="number" max="10000" onchange="updateDims(+this.value,Mandelbrot.height)"></label></div>
@@ -76,10 +78,9 @@
                     </div>
                     <div>
                         <div>Parameter: <input type="number" id="stopParam"></div>
-                        <button type="number" id="addStop">Add stop</button>
+                        <button id="addStop">Add stop</button>
                     </div>
-
-                    <div style="margin-top:30px"><div>
+                    <div style="margin-top:30px">
                         Video duration:
                         <input type="number" id="vidDuration">
                     </div>
@@ -88,7 +89,12 @@
                         <input type="number" id="vidFPS" value="30" min="1" max="120">
                     </div>
 
-                    <button onclick="record()">Apply</button>
+                    <button onclick="record()">Generate video</button>
+                </div>
+                <div id="settings">
+
+                    Settings
+                    <div id="params" class="menu"></div>
                 </div>
             </div>
         </div>

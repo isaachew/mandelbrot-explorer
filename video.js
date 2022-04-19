@@ -51,6 +51,7 @@ function updateHandles2(){
         inp.style.left=animStops[i].position*700+"px"
         addDrag(inp,a=>{
             selStop2=i
+            document.getElementById("stopParam").value=animStops[i].param
         },e=>{
             let offset=document.getElementById("animStops").offsetLeft
             var newInd=SortedArray.updatePosition(animStops,selStop2,(e.clientX-offset)/700)
@@ -112,16 +113,46 @@ async function record(){
     Mandelbrot.start()
     await render()
     enc.configure({codec:"vp8",width:width,height:height,bitrate:40000000})
+    let keyframe=null
+    let keyframeDepth=44444
     for(var i=0;i<duration*vidFPS;i++){
+        let newDepth=0.95**i
         let totalProgress=i/(duration*vidFPS)
         var params={}
         for(let i of animProps){
             params[i]=lerpArray(animation[i],totalProgress)
         }
-        Mandelbrot.updateWorkers({params})
-        Mandelbrot.start()
-        await render()
-        var vfr=new VideoFrame(document.getElementById("render"),{timestamp:i*1000000/vidFPS,duration:1000000/vidFPS})
+        let paramsChanged=0
+        let newFrame
+        if(paramsChanged){//keyframe needs to be rerendered
+            Mandelbrot.updateWorkers({params})
+            Mandelbrot.start()
+            await render()
+            newFrame=context.getImageData(0,0,width,height)
+        }else if(keyframeDepth>newDepth*2){
+            keyframeDepth=newDepth
+            Mandelbrot.updateCoords(Mandelbrot.cx,Mandelbrot.cy,newDepth)
+            Mandelbrot.start()
+            await render()
+            newFrame=context.getImageData(0,0,width,height)
+        }else{
+            console.log("scale option")
+            let keyframeData=context.getImageData(0,0,width,height)
+            let keyframeArr=new Uint32Array(keyframeData.data.buffer)
+            newFrame=context.createImageData(width,height)
+            let newFrameArr=new Uint32Array(newFrame.data.buffer)
+            for(var y=0;y<height;y++){
+                for(var x=0;x<width;x++){
+                    var index=y*width+x
+                    var scaledX=Math.round((x-width/2)*(newDepth/keyframeDepth)+width/2)
+                    var scaledY=Math.round((y-height/2)*(newDepth/keyframeDepth)+height/2)
+                    var scaledIndex=scaledY*width+scaledX
+                    newFrameArr[index]=keyframeArr[scaledIndex]
+                }
+            }
+        }
+        let bitmap=await createImageBitmap(newFrame)
+        var vfr=new VideoFrame(bitmap,{timestamp:i*1000000/vidFPS,duration:1000000/vidFPS})
         enc.encode(vfr,{keyFrame:(i%50==0)})
         vfr.close()
     }

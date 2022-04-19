@@ -105,7 +105,7 @@ body{
 }
 
 #paletteEditor{
-    margin: 7px;
+    margin:15px
 }
 
 #curStop div{
@@ -151,9 +151,12 @@ input{
     display:block
 }
 
-#vidTimeline{
-    width:700px;
+#video{
+
     margin-left:30px
+}
+#vidTimeline{
+    width:700px
 }
 #animStops{
     width:700px;
