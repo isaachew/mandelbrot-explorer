@@ -81,15 +81,18 @@
                         <button id="addStop">Add stop</button>
                     </div>
                     <div style="margin-top:30px">
-                        Video duration:
-                        <input type="number" id="vidDuration" value="15">
-                    </div>
-                    <div>
-                        FPS:
-                        <input type="number" id="vidFPS" value="30" min="1" max="120">
+                            <div><label>
+                                Video duration:
+                                <input type="number" id="vidDuration" value="15"> secs
+                            </label></div>
+                            <div><label>
+                                FPS:
+                                <input type="number" id="vidFPS" value="30" min="1" max="120">
+                            </label></div>
+                            <button onclick="record()">Generate video</button>
+                            <progress id="p" max="1" value="0">
                     </div>
 
-                    <button onclick="record()">Generate video</button>
                 </div>
                 <div id="settings">
 

@@ -95,28 +95,66 @@ document.getElementById("paramSelect").addEventListener("input",a=>{
     updateView()
 })
 
+let webpReplacement=window.VideoEncoder?false:true
 
-var vidChunks=[]
+function parseWebp(buf){
+    buffer=buf
+    let bufView=new DataView(buf)
+    let len=bufView.getUint32(4,1)
+    let coding=bufView.getUint32(12)
+    if(coding==0x56503820){
+        console.log("vp8 regular")
+        return buf.slice(20)
+        //throw new Error("not vp8")
+    }else if(coding==0x5650384c){
+        console.log("webp lossless")
+        throw new Error("webp lossless encoding")
+    }else if(coding==0x56503858){
+        var index=30
+        while(index<buf.byteLength){
+            let fcc=bufView.getUint32(index)
+            console.log([...new Uint8Array(buf.slice(index,index+4))].map(a=>String.fromCharCode(a)).join``)
+            let len=bufView.getUint32(index+4,1)
+            console.log(len)
+            if(fcc==0x56503820){
+                console.log("vp8 regular")
+                return buf.slice(index+8,index+len+8)
+            }else if(fcc==0x5650384c){
+                console.log("webp lossless")
+                throw new Error("webp lossless encoding")
+            }
+
+            index+=len+8
+        }
+        throw new Error("webp chunk not found")
+    }else{
+        let strcoding=[...new Uint8Array(buf.slice(12,16))].map(a=>String.fromCharCode(a)).join``
+        console.log("unknown webp format: ",strcoding)
+        throw new Error("")
+    }
+}
+
 async function record(){
-    vidChunks=[]
+    var vidChunks=[]
     //var startParam=+document.getElementById("startParam").value
     //var endParam=+document.getElementById("endParam").value
     var duration=+document.getElementById("vidDuration").value
     var vidFPS=+document.getElementById("vidFPS").value
-    var enc=new VideoEncoder({
-        output(a,b){
-            vidChunks.push(a)
-        },
-        error:console.log
-    })
+    if(!webpReplacement){
+        var enc=new VideoEncoder({
+            output(a,b){
+                vidChunks.push(a)
+            },
+            error:console.log
+        })
+        enc.configure({codec:"vp8",width:width,height:height/*,bitrate:40000000*/})
+    }
 
-    Mandelbrot.start()
-    await render()
-    enc.configure({codec:"vp8",width:width,height:height,bitrate:40000000})
     let targetDepth=Mandelbrot.depth
 
     let keyframe=null
     let keyframeDepth=44444
+
     for(var i=0;i<duration*vidFPS;i++){
         let totalProgress=i/(duration*vidFPS)
         let newDepth=4*(targetDepth/4)**totalProgress
@@ -128,6 +166,7 @@ async function record(){
         let newFrame
         if(paramsChanged){//keyframe needs to be rerendered
             Mandelbrot.updateWorkers({params})
+            Mandelbrot.updateCoords(Mandelbrot.cx,Mandelbrot.cy,newDepth)
             Mandelbrot.start()
             await render()
             newFrame=context.getImageData(0,0,width,height)
@@ -136,11 +175,10 @@ async function record(){
             Mandelbrot.updateCoords(Mandelbrot.cx,Mandelbrot.cy,newDepth)
             Mandelbrot.start()
             await render()
-            newFrame=context.getImageData(0,0,width,height)
+            keyFrame=newFrame=context.getImageData(0,0,width,height)
         }else{
             console.log("scale option")
-            let keyframeData=context.getImageData(0,0,width,height)
-            let keyframeArr=new Uint32Array(keyframeData.data.buffer)
+            let keyframeArr=new Uint32Array(keyFrame.data.buffer)
             newFrame=context.createImageData(width,height)
             let newFrameArr=new Uint32Array(newFrame.data.buffer)
             for(var y=0;y<height;y++){
@@ -153,18 +191,43 @@ async function record(){
                 }
             }
         }
-        let bitmap=await createImageBitmap(newFrame)
-        var vfr=new VideoFrame(bitmap,{timestamp:i*1000000/vidFPS,duration:1000000/vidFPS})
-        enc.encode(vfr,{keyFrame:(i%50==0)})
-        vfr.close()
+        if(webpReplacement){
+            let blob=await new Promise(res=>{
+                context.putImageData(newFrame,0,0)
+                document.getElementById("render").toBlob(res,"image/webp")
+            })
+            if(blob.type!="image/webp"){
+                throw new Error(`image/webp is not supported in HTMLCanvasElement.toBlob (${blob.type})`)
+            }
+            vidChunks.push({
+                type:"key",
+                timestamp:i*1000000/vidFPS,
+                duration:1000000/vidFPS,
+                byteLength:blob.size,
+                buffer:await blob.arrayBuffer(),
+                copyTo(arr){
+                    arr.set(new Uint8Array(parseWebp(this.buffer)))
+                }
+            })
+        }else{
+            let bitmap=await createImageBitmap(newFrame)
+            var vfr=new VideoFrame(bitmap,{timestamp:i*1000000/vidFPS,duration:1000000/vidFPS})
+            enc.encode(vfr,{keyFrame:(i%50==0)})
+            vfr.close()
+        }
+        
+        await new Promise(res=>setTimeout(res))
     }
 
-    await enc.flush()
+    if(!webpReplacement){
+        await enc.flush()
+        enc.close()
+    }
     console.log("done encoding")
     console.log("creating blob")
 
 
-    enc.close()
+
     var vidBlob=muxIntoBlob(vidChunks,{duration:duration*1000,encoding:"V_VP8",encodingName:"vp8 (webm)",width,height})
     download(vidBlob,"video.webm")
 

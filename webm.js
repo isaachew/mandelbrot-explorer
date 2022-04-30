@@ -84,7 +84,7 @@ function generateEBML(frames,{width:videoWidth,height:videoHeight,duration:vidDu
         }
         let block={
             id:0xA3,//SimpleBlock
-            content:createBlock(curFrame,timestamp-clusterTimestamp,frames[i].type=="key")
+            content:createBlock(curFrame,timestamp-clusterTimestamp,curFrame.type=="key")
         }
         if(frames[i].type=="key"){
             lastKeyTime=timestamp
