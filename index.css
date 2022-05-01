@@ -1,16 +1,51 @@
+/* Dark theme colours */
+@media(prefers-color-scheme:dark){
+    body{
+        background:#222;
+        color:#ccc
+    }
+
+    div input{
+        color:#ccc;
+        background:#444;
+    }
+}
+
+@media (pointer:coarse){
+    .colstop::after{
+        position:absolute;
+        content:"";
+        display:block;
+        height:200%;
+        width:200%;
+        left:-50%;
+        top:-50%;
+    }
+    #xhandle::after{
+        position:absolute;
+        content:"";
+        display:block;
+        height: 400%;
+        width:100%;
+        top: -150%;
+    }
+}
+
 html{
-    font-family:Arial
+    font-family:Helvetica
 }
 
 #canvcontainer{
     width:80%
 }
+
 #canvcontainer.vertical{
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
 }
+
 #render{
     display:block;
     touch-action:manipulation;
@@ -23,6 +58,8 @@ html{
 .vertical #render{
     width:100%;
 }
+
+
 #colStops{
     margin:0;
     position:relative
@@ -51,7 +88,11 @@ body{
     flex-shrink:0
 }
 #top{
-    flex-basis:20px
+    flex-basis: 40px;
+    background:#292929;
+    display:flex;
+    border-bottom:1px solid #777;
+    padding:0 5px
 }
 
 #mid{
@@ -74,26 +115,12 @@ body{
     background:#555;
     cursor:row-resize
 }
-@media (pointer:coarse){
-    .colstop::after{
-        position:absolute;
-        content:"";
-        display:block;
-        height:200%;
-        width:200%;
-        left:-50%;
-        top:-50%;
-    }
-    #xhandle::after{
-        position:absolute;
-        content:"";
-        display:block;
-        height: 400%;
-        width:100%;
-        top: -150%;
-    }
-}
 
+
+
+#bottom > div{
+    margin:15px 25px
+}
 
 #colStops{
     height:25px
@@ -102,10 +129,6 @@ body{
 #paletteDisplay{
     margin:auto;
     width:700px
-}
-
-#paletteEditor{
-    margin:15px
 }
 
 #curStop div{
@@ -132,18 +155,6 @@ input{
     border-color:#999;
 }
 
-@media(prefers-color-scheme:dark){
-    body{
-        background:#222;
-        color:#ccc
-    }
-
-    input{
-        color:#ccc;
-        background:#444;
-    }
-}
-
 #bottom > div{
     display:none
 }
@@ -152,8 +163,7 @@ input{
 }
 
 #video{
-
-    margin-left:30px
+    margin: 10px 30px;
 }
 #vidTimeline{
     width:700px
@@ -170,4 +180,25 @@ input{
     position:absolute;
     transform:translateX(-10px);
     border:1px solid #ccc;
+touch-action: none;}
+
+button{
+    margin:6px 4px;
+    border:1px solid #9bd;
+    border-radius:5px;
+    background:#292929;
+    color:#bbb
+}
+
+button:hover{
+    background:#111;
+    border:1px solid #ace;
+}
+
+button:active{
+    background:red
+}
+
+.menu div{
+    margin:4px 0
 }

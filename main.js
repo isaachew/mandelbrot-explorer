@@ -7,7 +7,7 @@ let width=canvas.width,height=canvas.height
 let scale=4
 let cx=0,cy=0
 let paletteId=0
-let scaleFactor=1;
+let scaleFactor=1
 let idata=context.createImageData(width,height)
 
 
@@ -90,8 +90,8 @@ function initModule(){
     //resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
     document.body.style.setProperty("--height",innerHeight+"px")
 
-    document.getElementById("mid").style.height=innerHeight-157-document.getElementById("mid").offsetTop+"px"
     updateDims(width,height)
+    handleResize()
     Mandelbrot.updateCoords(cx,cy,scale)
     Mandelbrot.start()
     render()
@@ -124,13 +124,7 @@ document.getElementById("render").addEventListener("contextmenu",e=>{
 document.getElementById("render").addEventListener("pointerup",e=>{
     let offx=e.offsetX,offy=e.offsetY
     let cont=document.getElementById("canvcontainer")
-    let isVertical=e.target.width*cont.offsetHeight-e.target.height*cont.offsetWidth>0
-    //let asr=1
-    if(isVertical){
-        scaleFactor=e.target.width/cont.offsetWidth
-    }else{
-        scaleFactor=e.target.height/cont.offsetHeight
-    }
+    
     offx*=scaleFactor,offy*=scaleFactor
 
     var coords=Mandelbrot.getCoords(offx,offy);
@@ -147,7 +141,7 @@ document.getElementById("render").addEventListener("pointerup",e=>{
     Mandelbrot.start()
     render()
 })
-// HACK: add ready variable so renders aren't interrupted
+//add ready variable so renders aren't interrupted
 ready=true
 document.getElementById("render").addEventListener("mousemove",e=>{
     if(!e.shiftKey)return
@@ -216,17 +210,20 @@ addDrag(xhandle,
     }
 )
 
-addEventListener("resize",a=>{
-    console.log("resized")
+function handleResize(){
+    //console.log("resized")
     document.body.style.setProperty("--height",innerHeight+"px")
     var mid=document.getElementById("mid")
-    mid.style.height=Math.min(mid.offsetHeight,innerHeight-157-document.getElementById("render").offsetTop)+"px"
-    if(width*canvcontainer.offsetHeight-canvcontainer.offsetWidth*height>0){
-        canvcontainer.className="vertical"
+    mid.style.height=Math.min(mid.offsetHeight,innerHeight*1/2-canvas.offsetTop)+"px"
+    let isVertical=canvas.width*mid.offsetHeight-canvas.height*mid.offsetWidth>0
+    //let asr=1
+    if(isVertical){
+        scaleFactor=canvas.width/mid.offsetWidth
     }else{
-        canvcontainer.className="horizontal"
+        scaleFactor=canvas.height/mid.offsetHeight
     }
-})
+}
+addEventListener("resize",handleResize)
 
 
 /*
@@ -298,3 +295,4 @@ for(let i in params){
 }
 
 initModule()
+handleResize()//update window dimensions

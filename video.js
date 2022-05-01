@@ -53,8 +53,11 @@ function updateHandles2(){
             selStop2=i
             document.getElementById("stopParam").value=animStops[i].param
         },e=>{
+            if(i==0||i==animStops.length-1)return
             let offset=document.getElementById("animStops").offsetLeft
-            var newInd=SortedArray.updatePosition(animStops,selStop2,(e.clientX-offset)/700)
+            let newProgress=(e.clientX-offset)/700
+            if(newProgress<0||newProgress>1)return;
+            var newInd=SortedArray.updatePosition(animStops,selStop2,newProgress)
             selStop2=newInd
             updateHandles2()
             updateView()

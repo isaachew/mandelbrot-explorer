@@ -23,6 +23,10 @@
     <body>
         <div id="maincontent">
             <div id="top">
+                <button onclick="showDiv('export')">Import/Export</button>
+                <button onclick="showDiv('paletteEditor')">Palette Editor</button>
+                <button onclick="showDiv('video')">Video</button>
+                <button onclick="showDiv('settings')">Settings</button>
 
             </div>
             <div id="mid">
@@ -31,10 +35,6 @@
                 </div>
                 <div style="width:7px;background:#555"></div>
                 <div id="sidebar">
-                    <button onclick="saveImg()">Download</button>
-                    <button onclick="showDiv('paletteEditor')">Palette Editor</button>
-                    <button onclick="showDiv('video')">Video</button>
-                    <button onclick="showDiv('settings')">Settings</button>
                     <div class="menu">
                         <div><label class="inputItem"><span>Iters:</span><input type="number" oninput="Mandelbrot.updateWorkers({iters:+this.value|0})"></label></div>
                         <div><label class="inputItem"><span>Width:</span><input type="number" max="10000" onchange="updateDims(+this.value,Mandelbrot.height)"></label></div>
@@ -47,6 +47,9 @@
             </div>
             <div id="xhandle">&nbsp;</div>
             <div id="bottom">
+                <div id="export">
+                    <button onclick="saveImg()">Download as image</button>
+                </div>
                 <div id="paletteEditor">
                     <div style="width:750px;padding-left:15px">
                         <div id="paletteDisplay">
