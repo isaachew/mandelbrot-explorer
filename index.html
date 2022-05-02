@@ -2,14 +2,6 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <script>
-            var initialised=false
-            var Mandelbrot={
-                onRuntimeInitialized:()=>{
-                    initialised=true
-                }
-            }
-        </script>
         <script src="mandelbrot/workers/mandelbrot.js"></script>
         <script src="dragdrop.js"></script>
         <script src="webm.js"></script>
@@ -52,6 +44,12 @@
                 </div>
                 <div id="paletteEditor">
                     <div style="width:750px;padding-left:15px">
+                        <select id="presetSelect">
+                            <option value='default'>Default Palette (Rainbow)</option>
+                            <option value='rand'>Random Palette 1</option>
+                            <option value='rgb'>RGB Palette</option>
+                        </select>
+
                         <div id="paletteDisplay">
                             <canvas id="paletteGradient" width="700" height="30"></canvas>
                             <div id="colStops"></div>

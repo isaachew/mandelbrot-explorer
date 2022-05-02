@@ -11,7 +11,7 @@ let scaleFactor=1
 let idata=context.createImageData(width,height)
 
 
-var resPtr=null,resultsArray=null
+var resultsArray=null
 
 let palette={
     stops:[
@@ -83,11 +83,8 @@ function draw(){
 
 function initModule(){
 
-    console.log("wasm + webpage loaded")
-    //Module.init(width,height)
+    console.log("webpage loaded")
 
-    //resPtr=Module.getImgArray()
-    //resultsArray=Module.HEAPU8.subarray(resPtr,resPtr+width*height*4)
     document.body.style.setProperty("--height",innerHeight+"px")
 
     updateDims(width,height)
@@ -124,7 +121,7 @@ document.getElementById("render").addEventListener("contextmenu",e=>{
 document.getElementById("render").addEventListener("pointerup",e=>{
     let offx=e.offsetX,offy=e.offsetY
     let cont=document.getElementById("canvcontainer")
-    
+
     offx*=scaleFactor,offy*=scaleFactor
 
     var coords=Mandelbrot.getCoords(offx,offy);
@@ -199,11 +196,7 @@ addDrag(xhandle,
         mid.style.height=(yPos-mid.offsetTop)+"px"
         mid.style.overflow="hidden"
 
-        if(width*canvcontainer.offsetHeight-canvcontainer.offsetWidth*height>0){
-            canvcontainer.className="vertical"
-        }else{
-            canvcontainer.className="horizontal"
-        }
+        handleResize()
     },
     function(){
 
@@ -214,29 +207,19 @@ function handleResize(){
     //console.log("resized")
     document.body.style.setProperty("--height",innerHeight+"px")
     var mid=document.getElementById("mid")
-    mid.style.height=Math.min(mid.offsetHeight,innerHeight*1/2-canvas.offsetTop)+"px"
+    mid.style.height=Math.min(mid.offsetHeight,innerHeight*3/5-canvas.offsetTop)+"px"
     let isVertical=canvas.width*mid.offsetHeight-canvas.height*mid.offsetWidth>0
     //let asr=1
     if(isVertical){
         scaleFactor=canvas.width/mid.offsetWidth
+        canvcontainer.className="vertical"
     }else{
         scaleFactor=canvas.height/mid.offsetHeight
+        canvcontainer.className="horizontal"
     }
 }
 addEventListener("resize",handleResize)
 
-
-/*
-xhandle.addEventListener("mousemove",a=>{
-    if(a.clientY==0)return
-    console.log("drag")
-    a.preventDefault()
-    console.log(mid.offsetY,a.clientY)
-    mid.style.height=(a.clientY-mid.offsetTop)+"px"
-    mid.style.overflow="hidden"
-})
-*/
-//xhandle.addEventListener("dragend",a=>{a.preventDefault()})
 
 
 function download(blob,filename){

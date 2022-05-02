@@ -1,3 +1,42 @@
+var palettePresets={
+    default:{
+        stops:[
+            {position:0,colour:[255,0,0]},
+            {position:1/6,colour:[255,255,0]},
+            {position:1/3,colour:[0,255,0]},
+            {position:.5,colour:[0,255,255]},
+            {position:2/3,colour:[0,0,255]},
+            {position:5/6,colour:[255,0,255]},
+            {position:1,colour:[255,0,0]}
+        ],
+        length:256
+    },
+    rand:{
+        stops:[
+            {position:0,colour:[140.876,101.473,69.206]},
+            {position:0.109,colour:[187.064,204.615,249.97]},
+            {position:0.222,colour:[137.797,149.87,157.419]},
+            {position:0.571,colour:[20.954,237.759,189.912]},
+            {position:0.775,colour:[25.324,139.237,125.001]},
+            {position:0.846,colour:[218.979,115.524,34.639]},
+            {position:1,colour:[140.876,101.473,69.206]}
+        ],
+        length:293
+    },
+    rgb:{
+        stops:[
+            {position:0,colour:[0,0,0]},
+            {position:1/6,colour:[255,180,180]},
+            {position:1/3,colour:[0,0,0]},
+            {position:.5,colour:[180,255,180]},
+            {position:2/3,colour:[0,0,0]},
+            {position:5/6,colour:[180,180,255]},
+            {position:1,colour:[0,0,0]}
+        ],
+        length:256
+    }
+}
+
 function hexToRGB(st){
     return [
         parseInt(st.slice(1,3),16),
@@ -112,6 +151,13 @@ document.getElementById("stopColour").addEventListener("input",function(e){
 })
 document.getElementById("lengthInput").addEventListener("input",function(e){
     palette.length=+this.value
+    draw()
+})
+
+document.getElementById("presetSelect").addEventListener("input",function(e){
+    palette=palettePresets[e.target.value]
+    updateGradient()
+    updateHandles()
     draw()
 })
 
