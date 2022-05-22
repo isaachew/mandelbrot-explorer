@@ -163,7 +163,7 @@ input{
 }
 
 #video{
-    margin: 10px 30px;
+    margin: 10px 30px
 }
 #vidTimeline{
     width:700px
@@ -180,7 +180,8 @@ input{
     position:absolute;
     transform:translateX(-10px);
     border:1px solid #ccc;
-touch-action: none;}
+    touch-action:none
+}
 
 button{
     margin:6px 4px;

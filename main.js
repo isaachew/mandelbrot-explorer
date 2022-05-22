@@ -230,7 +230,7 @@ function download(blob,filename){
     link.click()
     URL.revokeObjectURL(blob)
 }
-function saveImg(){
+document.getElementById("downloadImage").addEventListener("click",function(){
     document.getElementById('render').toBlob(a=>{
         var link=document.createElement('a')
         var objUrl=URL.createObjectURL(a)
@@ -238,7 +238,7 @@ function saveImg(){
         link.download="render.png"
         link.click()
     },'image/png')
-}
+})
 
 function showDiv(elem){
     [...document.getElementsByClassName("visible")].map(el=>{
@@ -247,6 +247,13 @@ function showDiv(elem){
 
     document.getElementById(elem).classList.add("visible")
 }
+
+[...document.getElementsByClassName("menuBtn")].forEach(a=>{
+    a.addEventListener("click",b=>{
+        showDiv(b.target.dataset.showId)
+    })
+})
+
 
 for(let i in params){
     let inp=document.createElement("input")

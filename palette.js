@@ -66,6 +66,9 @@ function randomPalette(){
     //Mandelbrot.start()
     draw()
 }
+document.getElementById("randomPalette").addEventListener("click",a=>{
+    randomPalette()
+})
 
 let selStop=null
 function updateGradient(){
@@ -154,8 +157,17 @@ document.getElementById("lengthInput").addEventListener("input",function(e){
     draw()
 })
 
+function clonePalette(pal){
+    var newPalette={stops:[],length:0}
+    newPalette.length=pal.length
+    for(var i of pal.stops){
+        newPalette.stops.push({position:i.position,colour:i.colour})
+    }
+    return newPalette
+}
+
 document.getElementById("presetSelect").addEventListener("input",function(e){
-    palette=palettePresets[e.target.value]
+    palette=clonePalette(palettePresets[e.target.value])
     updateGradient()
     updateHandles()
     draw()

@@ -15,11 +15,10 @@
     <body>
         <div id="maincontent">
             <div id="top">
-                <button onclick="showDiv('export')">Import/Export</button>
-                <button onclick="showDiv('paletteEditor')">Palette Editor</button>
-                <button onclick="showDiv('video')">Video</button>
-                <button onclick="showDiv('settings')">Settings</button>
-
+                <button class="menuBtn" data-show-id="export">Import/Export</button>
+                <button class="menuBtn" data-show-id="paletteEditor">Palette Editor</button>
+                <button class="menuBtn" data-show-id="video">Video</button>
+                <button class="menuBtn" data-show-id="settings">Settings</button>
             </div>
             <div id="mid">
                 <div id="canvcontainer" class="vertical">
@@ -40,7 +39,7 @@
             <div id="xhandle">&nbsp;</div>
             <div id="bottom">
                 <div id="export">
-                    <button onclick="saveImg()">Download as image</button>
+                    <button id="downloadImage">Download as image</button>
                 </div>
                 <div id="paletteEditor">
                     <div style="width:750px;padding-left:15px">
@@ -63,7 +62,7 @@
                             </div>
                         </div>
 
-                        <button onclick="randomPalette()">Random palette</button>
+                        <button id="randomPalette">Random palette</button>
 
                         <div style="margin-top:20px">Palette Length: <input type="number" id="lengthInput"></div>
                     </div>
@@ -90,7 +89,7 @@
                                 FPS:
                                 <input type="number" id="vidFPS" value="30" min="1" max="120">
                             </label></div>
-                            <button onclick="record()">Generate video</button>
+                            <button id="recordBtn">Generate video</button>
                             <progress id="p" max="1" value="0">
                     </div>
 
