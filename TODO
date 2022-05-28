@@ -2,15 +2,16 @@
 x Render image
 - Change colour palette (function, colours)
 x Change max. iterations
-- Perturbation
+x An input for parameters (parameters which affect the fractal)
+- IFS/chaos game rendering
 
 UI
 x No modals or blocking content
 x Palette editor opens in a separate pane
 - Video animation UI
-- Scenes
 
-Ideas:
+Ideas for the future:
 - Tabs? Panes to not block content?
-- An input for parameters (parameters which affect the fractal)
-- 
+
+- Perturbation
+- Scenes

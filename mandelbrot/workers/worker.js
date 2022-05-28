@@ -1,8 +1,7 @@
 var notify=()=>{}
-var dims={cx:0,cy:0,depth:1,width:800,height:600,iters:1000,params:{x:0,y:0}}
+var dims={cx:0,cy:0,depth:1,width:800,height:600,iters:1000,params:{x:0,y:0},fracType:"mandel"}
 var curval=null
 onmessage=function(mess){
-    //console.log(mess)
     if(mess.data.type==1){
         curval=mess.data
         notify()
@@ -18,8 +17,8 @@ async function wait(){
 function getcoords(x,y){
     return [(x-dims.width/2)/dims.width*dims.depth+dims.cx,(y-dims.height/2)/dims.width*dims.depth+dims.cy]
 }
-//*
-function numits(zx,zy){
+
+function numits_j(zx,zy){
     var cx=dims.params.x,cy=dims.params.y
     for(var j=0;j<dims.iters;j++){
         var zxs=zx*zx,zys=zy*zy
@@ -29,8 +28,11 @@ function numits(zx,zy){
     }
     return -1
 }
-function numits(cx,cy){
-    var zx=dims.params.x,zy=dims.params.y
+
+/**/
+
+function numits_m(cx,cy){
+    var zx=0,zy=0
     for(var j=0;j<dims.iters;j++){
         var zxs=zx*zx,zys=zy*zy
         if(zxs+zys>4)return j
@@ -39,8 +41,8 @@ function numits(cx,cy){
     }
     return -1
 }
-/*/
-
+/**/
+/*
 function numits(zx,zy){
     zy=-zy
     var ang=dims.params.angle*Math.PI/180
@@ -54,7 +56,11 @@ function numits(zx,zy){
     return -1
 }
 //*/
-
+let fracTypes={
+    julia:numits_j,
+    mandel:numits_m,
+    ifs:(a,b)=>0
+};
 
 (async()=>{
     while(1){
@@ -62,7 +68,8 @@ function numits(zx,zy){
         //console.log("notified")
         var row=new Array(dims.width)
         for(var i=0;i<dims.width;i++){
-            row[i]=numits(...getcoords(i,curval.row))
+            let fracFun=fracTypes[dims.fracType]
+            row[i]=fracFun(...getcoords(i,curval.row))
         }
         postMessage({row:curval.row,data:row})
     }

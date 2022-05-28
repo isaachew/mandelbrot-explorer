@@ -137,7 +137,7 @@ function parseWebp(buf){
     }
 }
 
-async function record(){
+document.getElementById("recordBtn").addEventListener("click",async function record(){
     var vidChunks=[]
     //var startParam=+document.getElementById("startParam").value
     //var endParam=+document.getElementById("endParam").value
@@ -218,7 +218,7 @@ async function record(){
             enc.encode(vfr,{keyFrame:(i%50==0)})
             vfr.close()
         }
-        
+
         await new Promise(res=>setTimeout(res))
     }
 
@@ -234,7 +234,7 @@ async function record(){
     var vidBlob=muxIntoBlob(vidChunks,{duration:duration*1000,encoding:"V_VP8",encodingName:"vp8 (webm)",width,height})
     download(vidBlob,"video.webm")
 
-}
+})
 
 updateView()
 updateHandles2()

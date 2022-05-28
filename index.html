@@ -27,6 +27,10 @@
                 <div style="width:7px;background:#555"></div>
                 <div id="sidebar">
                     <div class="menu">
+                        <select id="fractalType">
+                            <option value="mandel">Mandelbrot</option>
+                            <option value="julia">Julia Set</option>
+                        </select>
                         <div><label class="inputItem"><span>Iters:</span><input type="number" oninput="Mandelbrot.updateWorkers({iters:+this.value|0})"></label></div>
                         <div><label class="inputItem"><span>Width:</span><input type="number" max="10000" onchange="updateDims(+this.value,Mandelbrot.height)"></label></div>
                         <div><label class="inputItem"><span>Height:</span><input type="number" max="10000" onchange="updateDims(Mandelbrot.width,+this.value)"></label></div>

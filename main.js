@@ -48,24 +48,9 @@ async function render(){
         for(var x=0;x<width;x++){
             colarr[y*width+x]=-16777216|getcol(row[x])
         }
-        /*
-        nnow=performance.now()
-        if(nnow>pnow+30){
-            context.putImageData(idata,0,0,0,lrow,width,(y+1)-lrow)
-            lrow=(y+1)
-
-            await new Promise(a=>setTimeout(a))
-
-            pnow=nnow
-        }
-        */
     }
 
-    //idata.data.set(resultsArray,0)
     context.putImageData(idata,0,0)
-    //console.log("put img data")
-    //nnow=performance.now()
-    //console.log("render in "+1e-3*(nnow-start)+" s")
 }
 function draw(){
     var colarr=new Uint32Array(idata.data.buffer)
@@ -114,7 +99,11 @@ function updateDims(wid,hei){
     idata=context.createImageData(wid,hei)
     render()
 }
-
+document.getElementById("fractalType").addEventListener("input",e=>{
+    Mandelbrot.updateWorkers({fracType:e.target.value})
+    Mandelbrot.start()
+    render()
+})
 document.getElementById("render").addEventListener("contextmenu",e=>{
     e.preventDefault()
 })
