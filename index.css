@@ -11,6 +11,7 @@
     }
 }
 
+/* Touchscreen support */
 @media (pointer:coarse){
     .colstop::after{
         position:absolute;
@@ -109,14 +110,17 @@ body{
 #xhandle,.colstop{
     touch-action:none;
 }
+
+.colstop.selectedStop{
+    outline:1px solid #aaa
+}
+
 #xhandle{
     position:relative;
     height: 7px;
     background:#555;
     cursor:row-resize
 }
-
-
 
 #bottom > div{
     margin:15px 25px
@@ -187,17 +191,17 @@ button{
     margin:6px 4px;
     border:1px solid #9bd;
     border-radius:5px;
-    background:#292929;
+    background:#333;
     color:#bbb
 }
 
 button:hover{
-    background:#111;
-    border:1px solid #ace;
+    background:#222;
+    border:1px solid #ace
 }
 
 button:active{
-    background:red
+    background:#111
 }
 
 .menu div{

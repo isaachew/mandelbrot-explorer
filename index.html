@@ -47,11 +47,7 @@
                 </div>
                 <div id="paletteEditor">
                     <div style="width:750px;padding-left:15px">
-                        <select id="presetSelect">
-                            <option value='default'>Default Palette (Rainbow)</option>
-                            <option value='rand'>Random Palette 1</option>
-                            <option value='rgb'>RGB Palette</option>
-                        </select>
+                        <select id="presetSelect"></select>
 
                         <div id="paletteDisplay">
                             <canvas id="paletteGradient" width="700" height="30"></canvas>
@@ -67,6 +63,8 @@
                         </div>
 
                         <button id="randomPalette">Random palette</button>
+                        <button id="remColourStop">Remove colour stop</button>
+                        <span>Add colour stops by clicking the palette.</span>
 
                         <div style="margin-top:20px">Palette Length: <input type="number" id="lengthInput"></div>
                     </div>

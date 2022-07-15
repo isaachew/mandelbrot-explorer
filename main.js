@@ -27,7 +27,7 @@ let palette={
 }
 
 function getcol(x){
-    if(x==-1)return 0
+    if(x<0)return 0
     x+=palette.time||0
     let progress=x%palette.length/palette.length
     let palind=palette.stops.findIndex(a=>a.position>progress)
@@ -195,16 +195,16 @@ addDrag(xhandle,
 function handleResize(){
     //console.log("resized")
     document.body.style.setProperty("--height",innerHeight+"px")
-    var mid=document.getElementById("mid")
-    mid.style.height=Math.min(mid.offsetHeight,innerHeight*3/5-canvas.offsetTop)+"px"
-    let isVertical=canvas.width*mid.offsetHeight-canvas.height*mid.offsetWidth>0
+    var canvCont=document.getElementById("canvcontainer")
+    document.getElementById("mid").style.height=Math.min(mid.offsetHeight,innerHeight*3/5-canvCont.offsetTop)+"px"
+    let isVertical=canvas.width*canvCont.offsetHeight-canvas.height*canvCont.offsetWidth>0
     //let asr=1
     if(isVertical){
-        scaleFactor=canvas.width/mid.offsetWidth
-        canvcontainer.className="vertical"
+        scaleFactor=canvas.width/canvCont.offsetWidth
+        canvCont.className="vertical"
     }else{
-        scaleFactor=canvas.height/mid.offsetHeight
-        canvcontainer.className="horizontal"
+        scaleFactor=canvas.height/canvCont.offsetHeight
+        canvCont.className="horizontal"
     }
 }
 addEventListener("resize",handleResize)

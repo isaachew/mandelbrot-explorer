@@ -1,5 +1,5 @@
 var palettePresets={
-    default:{
+    rainbow:{
         stops:[
             {position:0,colour:[255,0,0]},
             {position:1/6,colour:[255,255,0]},
@@ -9,7 +9,8 @@ var palettePresets={
             {position:5/6,colour:[255,0,255]},
             {position:1,colour:[255,0,0]}
         ],
-        length:256
+        length:256,
+        name:"Rainbow (default)"
     },
     rand:{
         stops:[
@@ -21,7 +22,8 @@ var palettePresets={
             {position:0.846,colour:[218.979,115.524,34.639]},
             {position:1,colour:[140.876,101.473,69.206]}
         ],
-        length:293
+        length:293,
+        name:"Random Palette 1"
     },
     rgb:{
         stops:[
@@ -33,8 +35,18 @@ var palettePresets={
             {position:5/6,colour:[180,180,255]},
             {position:1,colour:[0,0,0]}
         ],
-        length:256
+        length:256,
+        name:"RGB Palette"
     }
+}
+
+//let exPals=JSON.parse(localStorage.palettes)
+//Object.assign(palettePresets,exPals)
+for(var i in palettePresets){
+    var sel=document.createElement("option")
+    sel.value=i
+    sel.append(palettePresets[i].name)
+    document.getElementById("presetSelect").append(sel)
 }
 
 function hexToRGB(st){
@@ -101,7 +113,9 @@ function updateHandles(){
         dvel.style.left=colStop.position*700+"px"
 
         function selectStop(){
+            if(selStop!=null)document.getElementById("paletteStop"+selStop).classList.remove("selectedStop")
             selStop=curIndex
+            document.getElementById("paletteStop"+selStop).classList.add("selectedStop")
             document.getElementById("stopOffset").value=palette.stops[curIndex].position
             document.getElementById("stopColour").value=rgbToHex(palette.stops[curIndex].colour)
         }
@@ -125,6 +139,35 @@ function updateHandles(){
         document.getElementById("colStops").append(dvel)
     }
 }
+
+function addColourStop(stop){
+    SortedArray.pushAndSort(palette.stops,stop)
+    updateGradient()
+    updateHandles()
+    draw()
+}
+function removeColourStop(index){
+    if(index%(palette.stops.length-1)){
+        palette.stops.splice(index,1)
+
+        updateGradient()
+        updateHandles()
+        draw()
+    }
+}
+
+
+document.getElementById("remColourStop").addEventListener("click",e=>{
+    if(selStop!=null){
+        removeColourStop(selStop)
+        selStop=null
+    }
+})
+document.getElementById("paletteGradient").addEventListener("click",e=>{
+    console.log(e.clientX,e.target.offsetLeft,(e.clientX-e.target.offsetLeft)/e.target.offsetWidth)
+    addColourStop({position:(e.clientX-e.target.offsetLeft)/e.target.offsetWidth,colour:[255,255,255]})
+})
+
 
 function moveColourStop(index,position){
 

@@ -72,16 +72,19 @@ document.getElementById("animVisual").addEventListener("dblclick",a=>{
     updateHandles2()
 })
 
-document.getElementById("animVisual").addEventListener("click",a=>{
+document.getElementById("animVisual").addEventListener("mousemove",a=>{
     let totalProgress=a.offsetX/700
     var params={}
     for(let i of animProps){
         params[i]=lerpArray(animation[i],totalProgress)
     }
     console.log(params)
-    Mandelbrot.updateWorkers({params})
-    Mandelbrot.start()
-    render()
+    if(ready){
+        ready=false
+        Mandelbrot.updateWorkers({params})
+        Mandelbrot.start()
+        render().then(a=>{ready=true})
+    }
 })
 
 document.getElementById("addStop").addEventListener("click",a=>{
